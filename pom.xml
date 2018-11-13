@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>ru.kpfu.itis.androidlab</groupId>
-	<artifactId>Join</artifactId>
+	<artifactId>joins</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
