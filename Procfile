@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -jar target/classes:target/dependency/* Join
+web: java $JAVA_OPTS -jar target/classes/* Join
