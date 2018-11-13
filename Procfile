@@ -1,1 +1,1 @@
-web: java -jar target/joins.jar
+web: java -jar target/Join.jar
