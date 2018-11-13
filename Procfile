@@ -1,1 +1,1 @@
-web: java -jar target/Join.jar --port $PORT target/*.war
+web: java $JAVA_OPTS -jar target/classes:target/dependency/* Join
