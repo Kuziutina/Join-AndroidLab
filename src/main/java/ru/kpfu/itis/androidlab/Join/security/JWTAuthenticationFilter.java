@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -76,6 +77,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 
         response.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
+        response.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
         response.getWriter().print("{\"user_id\": " + customUserDetails.getId() + "}");
         response.getWriter().flush();
     }
