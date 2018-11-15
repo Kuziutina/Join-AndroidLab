@@ -23,7 +23,7 @@ public class ConfirmationService implements ConfirmationServiceInt {
 
     public void sendConfirmationLetter(String email) {
         String codeConfirmed = Generator.generate(6);
-        Confirmation confirmation = confirmationRepository.findByEmail(email);
+        Confirmation confirmation = confirmationRepository.findOneByEmail(email);
         if (confirmation == null) {
             confirmation = Confirmation.builder().email(email).build();
         }
@@ -33,7 +33,7 @@ public class ConfirmationService implements ConfirmationServiceInt {
     }
 
     public void deleteConfirmation(String email) {
-        confirmationRepository.deleteByEmail(email);
+        confirmationRepository.deleteAllByEmail(email);
     }
 
 }
