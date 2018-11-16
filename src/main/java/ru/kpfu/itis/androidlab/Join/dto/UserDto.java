@@ -21,18 +21,18 @@ public class UserDto {
     private String email;
     private String username;
     private String name;
-    private String lastName;
-    private String phone;
+    private String lastname;
+    private String phoneNumber;
 
     private List<SpecializationDto> specializations;
 
     private UserDto(User user) {
         id = user.getId();
         name = user.getName();
-        lastName = user.getLastName();
+        lastname = user.getLastName();
         username = user.getUsername();
         email = user.getEmail();
-        phone = user.getPhone();
+        phoneNumber = user.getPhone();
 
         specializations = new ArrayList<>();
 

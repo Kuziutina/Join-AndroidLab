@@ -17,12 +17,12 @@ public class SpecializationDto {
     private Long id;
     private Integer knowledgeLevel;
     private Integer experience;
-    private String specializationName;
+    private String name;
     private String technologies;
 
     public SpecializationDto(Specialization specialization) {
         id = specialization.getId();
-        specializationName = specialization.getSpecializationName().getName();
+        name = specialization.getSpecializationName().getName();
         knowledgeLevel = specialization.getKnowledgeLevel();
         experience = specialization.getExperience();
         technologies = specialization.getTechnologies();
