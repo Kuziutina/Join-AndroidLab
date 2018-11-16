@@ -31,7 +31,7 @@ public class UserService implements UserServiceInt {
 
     @Override
     public ResponseForm registerUser(RegistrationForm registrationDto) {
-        User user = User.builder().name(registrationDto.getUsername())
+        User user = User.builder().username(registrationDto.getUsername())
                                 .email(registrationDto.getEmail())
                                 .password(passwordEncoder.encode(registrationDto.getPassword()))
                                 .build();

@@ -18,7 +18,7 @@ import java.util.List;
 @EqualsAndHashCode
 public class UserDto {
     private Long id;
-    private String mail;
+    private String email;
     private String username;
     private String name;
     private String lastName;
@@ -31,7 +31,7 @@ public class UserDto {
         name = user.getName();
         lastName = user.getLastName();
         username = user.getUsername();
-        mail = user.getEmail();
+        email = user.getEmail();
         phone = user.getPhone();
 
         specializations = new ArrayList<>();
