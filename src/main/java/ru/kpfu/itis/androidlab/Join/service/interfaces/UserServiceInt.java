@@ -1,10 +1,7 @@
 package ru.kpfu.itis.androidlab.Join.service.interfaces;
 
 import ru.kpfu.itis.androidlab.Join.dto.UserDto;
-import ru.kpfu.itis.androidlab.Join.form.ProfileForm;
-import ru.kpfu.itis.androidlab.Join.form.ResponseForm;
-import ru.kpfu.itis.androidlab.Join.form.RegistrationForm;
-import ru.kpfu.itis.androidlab.Join.form.ResultForm;
+import ru.kpfu.itis.androidlab.Join.form.*;
 import ru.kpfu.itis.androidlab.Join.model.User;
 
 public interface UserServiceInt {
@@ -14,4 +11,5 @@ public interface UserServiceInt {
     User getUserByEmail(String email);
     User getUserByUsername(String username);
     ResultForm change(Long id, ProfileForm profileForm);
+    void changeUserPassword(ChangePasswordForm changePasswordForm);
 }

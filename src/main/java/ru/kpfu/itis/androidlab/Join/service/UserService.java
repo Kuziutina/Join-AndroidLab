@@ -77,13 +77,20 @@ public class UserService implements UserServiceInt {
             return ResultForm.builder().code(400).error("Invalid email").build();
         }
         user.setName(profileForm.getName());
-        user.setLastName(profileForm.getLastName());
+        user.setLastName(profileForm.getLastname());
         user.setUsername(profileForm.getUsername());
         user.setEmail(profileForm.getEmail());
         user.setPhone(profileForm.getPhoneNumber());
 
         userRepository.save(user);
         return ResultForm.builder().code(200).build();
+    }
+
+    @Override
+    public void changeUserPassword(ChangePasswordForm changePasswordForm) {
+        User user = getUserByEmail(changePasswordForm.getEmail());
+        user.setPassword(passwordEncoder.encode(changePasswordForm.getPassword()));
+        userRepository.save(user);
     }
 
 

@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 public class ProfileForm {
     private String name;
-    private String lastName;
+    private String lastname;
     private String username;
     private String email;
     private String phoneNumber;
