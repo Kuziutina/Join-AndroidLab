@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ProfileForm {
+    private Long id;
     private String name;
     private String lastname;
     private String username;

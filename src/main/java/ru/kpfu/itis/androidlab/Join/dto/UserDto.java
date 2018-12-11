@@ -23,6 +23,7 @@ public class UserDto {
     private String name;
     private String lastname;
     private String phoneNumber;
+    private String profileImage;
 
     private List<SpecializationDto> specializations;
 
@@ -33,7 +34,7 @@ public class UserDto {
         username = user.getUsername();
         email = user.getEmail();
         phoneNumber = user.getPhone();
-
+        profileImage = user.getProfileImageLink();
         specializations = new ArrayList<>();
 
         for (Specialization specialization: user.getSpecializations()) {

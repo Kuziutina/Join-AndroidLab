@@ -25,17 +25,13 @@ public class User {
 
     private String password;
 
-    private String token;
-
     private String name;
 
     private String lastName;
 
     private String phone;
 
-    private boolean confirmed;
-
-    private String code;
+    private String profileImageLink;
 
     @ManyToMany(mappedBy = "participants", fetch = FetchType.LAZY)
     private List<Project> projects;
@@ -46,8 +42,11 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Notification> notifications;
 
-
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Specialization> specializations;
+
+    @OneToMany(mappedBy = "leader", fetch = FetchType.LAZY)
+    private List<Project> leaderProjects;
+
 
 }

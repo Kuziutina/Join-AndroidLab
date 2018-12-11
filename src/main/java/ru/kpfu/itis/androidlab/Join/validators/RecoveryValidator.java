@@ -1,5 +1,6 @@
 package ru.kpfu.itis.androidlab.Join.validators;
 
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import ru.kpfu.itis.androidlab.Join.form.ConfirmationForm;
@@ -7,6 +8,7 @@ import ru.kpfu.itis.androidlab.Join.model.User;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.RecoveryServiceInt;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.UserServiceInt;
 
+@Component
 public class RecoveryValidator implements Validator {
 
     private UserServiceInt userService;
