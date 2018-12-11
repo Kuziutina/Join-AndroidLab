@@ -2,9 +2,7 @@ package ru.kpfu.itis.androidlab.Join.controller;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import netscape.javascript.JSObject;
-import org.cloudinary.json.JSONArray;
-import org.cloudinary.json.JSONObject;
+import org.json.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

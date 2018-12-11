@@ -1,7 +1,6 @@
 package ru.kpfu.itis.androidlab.Join.controller;
 
-import org.cloudinary.json.JSONObject;
-import org.springframework.http.RequestEntity;
+import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kpfu.itis.androidlab.Join.dto.ProjectDto;
