@@ -1,11 +1,13 @@
 package ru.kpfu.itis.androidlab.Join.validators;
 
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import ru.kpfu.itis.androidlab.Join.form.ChangePasswordForm;
 import ru.kpfu.itis.androidlab.Join.model.Recovery;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.RecoveryServiceInt;
 
+@Component
 public class ChangePasswordValidator implements Validator {
 
     private RecoveryServiceInt recoveryService;

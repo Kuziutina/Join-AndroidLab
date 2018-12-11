@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import ru.kpfu.itis.androidlab.Join.form.ChangePasswordForm;
 import ru.kpfu.itis.androidlab.Join.form.ConfirmationForm;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.RecoveryServiceInt;
+import ru.kpfu.itis.androidlab.Join.validators.ChangePasswordValidator;
 import ru.kpfu.itis.androidlab.Join.validators.RecoveryValidator;
 
 import javax.validation.Valid;
@@ -19,15 +20,24 @@ public class RecoveryController extends MainController{
 
     private RecoveryServiceInt recoveryService;
     private RecoveryValidator recoveryValidator;
+    private ChangePasswordValidator changePasswordValidator;
 
-    public RecoveryController(RecoveryServiceInt recoveryService, RecoveryValidator recoveryValidator) {
+    public RecoveryController(RecoveryServiceInt recoveryService,
+                              RecoveryValidator recoveryValidator,
+                              ChangePasswordValidator changePasswordValidator) {
         this.recoveryService = recoveryService;
         this.recoveryValidator = recoveryValidator;
+        this.changePasswordValidator = changePasswordValidator;
     }
 
     @InitBinder("confirmationForm")
     public void initUserFormValidator(WebDataBinder binder) {
         binder.addValidators(recoveryValidator);
+    }
+
+    @InitBinder("changePasswordForm")
+    public void initChangePasswordFormValidator(WebDataBinder binder) {
+        binder.addValidators(changePasswordValidator);
     }
 
     @PostMapping(value = "/recovery/email")

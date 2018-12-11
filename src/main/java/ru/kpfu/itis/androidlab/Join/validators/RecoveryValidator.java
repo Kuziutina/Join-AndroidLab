@@ -28,7 +28,7 @@ public class RecoveryValidator implements Validator {
 
         User user = userService.getUserByEmail(confirmationForm.getEmail());
         if (user == null) {
-            errors.reject("invalid login", "Пользователь с логином " + confirmationForm.getEmail() + " уже существует.");
+            errors.reject("invalid login", "Пользователь с логином " + confirmationForm.getEmail() + " nе существует.");
         }
     }
 }

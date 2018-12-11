@@ -1,5 +1,6 @@
 package ru.kpfu.itis.androidlab.Join.controller;
 
+import org.cloudinary.json.JSONObject;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class ProjectController {
     public ResponseEntity createProject(@RequestBody ProjectForm projectForm) {
         Long userId = projectService.createProject(projectForm);
 
-        return ResponseEntity.ok(userId);
+        return ResponseEntity.ok(new JSONObject().put("id", userId));
     }
 
     @GetMapping(value = "/{id}")

@@ -2,6 +2,9 @@ package ru.kpfu.itis.androidlab.Join.controller;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import netscape.javascript.JSObject;
+import org.cloudinary.json.JSONArray;
+import org.cloudinary.json.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -82,10 +85,13 @@ public class UserController extends MainController{
     @SuppressWarnings("rawtypes")
     @PostMapping(value = "/{id}/upload")
     public ResponseEntity singleFileUpload(@RequestParam("file") MultipartFile file, @PathVariable Long id) {
+        String url = null;
         Map uploadResult = null;
         if (file.isEmpty()) {
             //TODO error
-            return ResponseEntity.status(400).body(null);
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.add("error", "file is empty");
+            return ResponseEntity.status(400).headers(httpHeaders).build();
         }
         try {
 
@@ -96,14 +102,14 @@ public class UserController extends MainController{
 
             uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap("resource_type", "auto"));
 
-            String url = (String) uploadResult.get("url");
+            url = (String) uploadResult.get("url");
             userService.addProfileImage(url, id);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new JSONObject().put("profileImage", url));
     }
 
 
@@ -116,7 +122,7 @@ public class UserController extends MainController{
 
     @GetMapping(value = "/search")
     public ResponseEntity searchUser(@RequestParam(value = "username", required = false) String username,
-                                     @RequestParam(value = "vacancy_name", required = false) String vacancyName,
+                                     @RequestParam(value = "specialization_name", required = false) String vacancyName,
                                      @RequestParam(value = "knowledge_level", required = false) Integer level,
                                      @RequestParam(value = "experience", required = false) Integer experience) {
         List<SimpleUserDto> userDtos = userService.findUserDtos(username, vacancyName, level, experience);
