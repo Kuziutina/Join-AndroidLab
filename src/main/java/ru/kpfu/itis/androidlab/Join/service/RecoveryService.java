@@ -28,7 +28,11 @@ public class RecoveryService implements RecoveryServiceInt {
     public void sendRecoveryLetter(String email) {
         String code = Generator.generate(6);
         User user = userService.getUserByEmail(email);
-        Recovery recovery = Recovery.builder().recoveryLink(code).user(user).build();
+        Recovery recovery = recoveryRepository.getByUser(user);
+        if (recovery == null) {
+            recovery = Recovery.builder().user(user).build();
+        }
+        recovery.setRecoveryLink(code);
         recoveryRepository.save(recovery);
         emailSender.sendEmailMessage(email, "Восстановление пароля", "Код для восстановления пароля " + code);
     }
