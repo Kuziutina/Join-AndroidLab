@@ -107,7 +107,7 @@ public class UserController extends MainController{
             e.printStackTrace();
         }
 
-        return ResponseEntity.ok(new JSONObject().put("profileImage", url));
+        return ResponseEntity.ok(url);
     }
 
 

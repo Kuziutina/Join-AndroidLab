@@ -7,6 +7,7 @@ import ru.kpfu.itis.androidlab.Join.dto.ProjectDto;
 import ru.kpfu.itis.androidlab.Join.form.ProjectForm;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.ProjectServiceInt;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -33,7 +34,7 @@ public class ProjectController {
     public ResponseEntity createProject(@RequestBody ProjectForm projectForm) {
         Long userId = projectService.createProject(projectForm);
 
-        return ResponseEntity.ok(new JSONObject().put("id", userId));
+        return ResponseEntity.ok(userId);
     }
 
     @GetMapping(value = "/{id}")
