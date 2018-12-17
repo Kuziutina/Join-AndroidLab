@@ -2,6 +2,8 @@ package ru.kpfu.itis.androidlab.Join.form;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,4 +16,6 @@ public class ProfileForm {
     private String username;
     private String email;
     private String phoneNumber;
+
+    private List<SpecializationForm> specializations;
 }

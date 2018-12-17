@@ -95,6 +95,33 @@ public class UserService implements UserServiceInt {
     }
 
     @Override
+    public ResultForm updateWithSpec(Long id, ProfileForm profileForm) {
+        User user = getUser(id);
+        User checkUser = userRepository.findUserByUsername(profileForm.getUsername());
+        if (checkUser != null && !user.equals(checkUser)) {
+            return ResultForm.builder().code(400).error("Invalid username").build();
+        }
+        checkUser = userRepository.findUserByEmail(profileForm.getEmail());
+        if (checkUser != null && !user.equals(checkUser)) {
+            return ResultForm.builder().code(400).error("Invalid email").build();
+        }
+        user.setName(profileForm.getName());
+        user.setLastName(profileForm.getLastname());
+        user.setUsername(profileForm.getUsername());
+        user.setEmail(profileForm.getEmail());
+        user.setPhone(profileForm.getPhoneNumber());
+        specializationService.deleteSpecialization(user);
+
+        for (SpecializationForm specializationForm: profileForm.getSpecializations()) {
+            ResultForm resultForm = specializationService.addSpecialization(user, specializationForm);
+            if (resultForm.getCode() != 200) return resultForm;
+        }
+
+        userRepository.save(user);
+        return ResultForm.builder().code(200).build();
+    }
+
+    @Override
     public void changeUserPassword(ChangePasswordForm changePasswordForm) {
         User user = getUserByEmail(changePasswordForm.getEmail());
         user.setPassword(passwordEncoder.encode(changePasswordForm.getPassword()));

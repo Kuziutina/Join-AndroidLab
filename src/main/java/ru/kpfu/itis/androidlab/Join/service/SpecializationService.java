@@ -93,6 +93,11 @@ public class SpecializationService implements SpecializationServiceInt {
         specializationRepository.deleteSpecializationsByProject(project);
     }
 
+    @Override
+    public void deleteSpecialization(User user) {
+        specializationRepository.deleteSpecializationsByUser(user);
+    }
+
 
     @Override
     public SpecializationName findSpecializationName(String specializationName) {

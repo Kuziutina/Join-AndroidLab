@@ -63,6 +63,12 @@ public class UserController extends MainController{
         return createResponseEntity(resultForm);
     }
 
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<ResponseForm> updateProfileWithSpec(@PathVariable Long id, @RequestBody ProfileForm profileForm) {
+        ResultForm resultForm = userService.updateWithSpec(id, profileForm);
+        return createResponseEntity(resultForm);
+    }
+
     @GetMapping(value = "/{id}/upload")
     @ResponseBody
     public String testUp(@PathVariable Long id) {

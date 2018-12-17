@@ -10,4 +10,5 @@ public interface SpecializationRepository extends JpaRepository<Specialization, 
     public Specialization findBySpecializationNameAndUser(SpecializationName name, User user);
     public void deleteAllByProject(Project project);
     void deleteSpecializationsByProject(Project project);
+    void deleteSpecializationsByUser(User user);
 }

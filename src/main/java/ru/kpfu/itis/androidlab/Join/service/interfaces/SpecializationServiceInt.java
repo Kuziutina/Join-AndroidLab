@@ -14,6 +14,7 @@ public interface SpecializationServiceInt {
 
     Specialization addSpecialization(Project project, SpecializationForm specializationForm);
     void deleteSpecialization(Project project);
+    void deleteSpecialization(User user);
 
     SpecializationName findSpecializationName(String specializationName);
 }

@@ -14,6 +14,7 @@ public interface UserServiceInt {
     User getUserByEmail(String email);
     User getUserByUsername(String username);
     ResultForm change(Long id, ProfileForm profileForm);
+    ResultForm updateWithSpec(Long id, ProfileForm profileForm);
     void changeUserPassword(ChangePasswordForm changePasswordForm);
     void addProfileImage(String url, Long id);
 
