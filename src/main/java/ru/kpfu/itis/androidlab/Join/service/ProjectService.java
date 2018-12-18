@@ -101,6 +101,8 @@ public class ProjectService implements ProjectServiceInt {
                 }
 
             }
+        }else {
+            result = projects;
         }
 
         List<ProjectDto> projectDtos = new ArrayList<>();
