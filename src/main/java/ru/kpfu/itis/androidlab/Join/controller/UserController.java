@@ -12,10 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.kpfu.itis.androidlab.Join.dto.SimpleProjectDto;
 import ru.kpfu.itis.androidlab.Join.dto.SimpleUserDto;
 import ru.kpfu.itis.androidlab.Join.dto.UserDto;
-import ru.kpfu.itis.androidlab.Join.form.ProfileForm;
-import ru.kpfu.itis.androidlab.Join.form.ResponseForm;
-import ru.kpfu.itis.androidlab.Join.form.ResultForm;
-import ru.kpfu.itis.androidlab.Join.form.SpecializationForm;
+import ru.kpfu.itis.androidlab.Join.form.*;
 import ru.kpfu.itis.androidlab.Join.model.User;
 import ru.kpfu.itis.androidlab.Join.repository.UserRepository;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.ProjectServiceInt;
@@ -132,6 +129,21 @@ public class UserController extends MainController{
         List<SimpleUserDto> userDtos = userService.findUserDtos(username, vacancyName, level, experience);
 
         return ResponseEntity.ok(userDtos);
+    }
+
+    @PostMapping(value = "/invite/response")
+    public ResponseEntity inviteUser(@RequestBody InviteUserForm inviteUserForm) {
+
+        userService.inviteUser(inviteUserForm);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/invite")
+    public ResponseEntity addUserToProject(@RequestBody InviteUserForm inviteUserForm) {
+        userService.addUserToProject(inviteUserForm);
+
+        return ResponseEntity.ok().build();
     }
 
 }

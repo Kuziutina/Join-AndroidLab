@@ -50,7 +50,8 @@ public class ProjectService implements ProjectServiceInt {
         return projectDtos;
     }
 
-    private Project getProject(Long id) {
+    @Override
+    public Project getProject(Long id) {
         return projectRepository.getOne(id);
     }
 

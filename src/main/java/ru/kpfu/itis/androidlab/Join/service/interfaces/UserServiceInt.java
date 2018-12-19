@@ -18,5 +18,8 @@ public interface UserServiceInt {
     void changeUserPassword(ChangePasswordForm changePasswordForm);
     void addProfileImage(String url, Long id);
 
+    void inviteUser(InviteUserForm inviteUserForm);
+    void addUserToProject(InviteUserForm inviteUserForm);
+
     List<SimpleUserDto> findUserDtos(String username, String vacancyName, Integer level, Integer experience);
 }

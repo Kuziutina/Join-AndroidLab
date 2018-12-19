@@ -1,16 +1,15 @@
 package ru.kpfu.itis.androidlab.Join.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
 @Getter
+@Builder
 @Entity
 public class Notification {
     @Id
@@ -25,5 +24,12 @@ public class Notification {
     @JoinColumn(name = "project_id", referencedColumnName = "id")
     private Project project;
 
+    private String message;
+
     private Integer type;
+
+    private Date date;
+
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean seeing;
 }

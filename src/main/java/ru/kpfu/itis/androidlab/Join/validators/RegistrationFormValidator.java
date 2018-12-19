@@ -47,7 +47,10 @@ public class RegistrationFormValidator implements Validator {
         }
 
         Confirmation confirmation = confirmationRepository.findOneByEmail(registrationForm.getEmail());
-        if (!confirmation.getCode().equals(registrationForm.getCode())) {
+        if(confirmation == null) {
+            errors.reject("invalid login, not found", "not found login in confirmation");
+        }
+        else if (!confirmation.getCode().equals(registrationForm.getCode())) {
             errors.reject("invalid confirmation", "Confirmation code incorrect");
         }
 

@@ -5,18 +5,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.kpfu.itis.androidlab.Join.dto.*;
 import ru.kpfu.itis.androidlab.Join.form.*;
-import ru.kpfu.itis.androidlab.Join.model.Specialization;
-import ru.kpfu.itis.androidlab.Join.model.SpecializationName;
-import ru.kpfu.itis.androidlab.Join.model.User;
+import ru.kpfu.itis.androidlab.Join.model.*;
 import ru.kpfu.itis.androidlab.Join.repository.UserRepository;
-import ru.kpfu.itis.androidlab.Join.service.interfaces.ConfirmationServiceInt;
-import ru.kpfu.itis.androidlab.Join.service.interfaces.SpecializationServiceInt;
-import ru.kpfu.itis.androidlab.Join.service.interfaces.UserServiceInt;
+import ru.kpfu.itis.androidlab.Join.service.interfaces.*;
 import ru.kpfu.itis.androidlab.Join.util.EmailSender;
 import ru.kpfu.itis.androidlab.Join.util.Generator;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -26,15 +23,21 @@ public class UserService implements UserServiceInt {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
     private SpecializationServiceInt specializationService;
+   // private ProjectServiceInt projectService;
+    private NotificationServiceInt notificationService;
 
     public UserService(UserRepository userRepository,
                        ConfirmationServiceInt confirmationService,
                        PasswordEncoder passwordEncoder,
-                       SpecializationServiceInt specializationService) {
+                       SpecializationServiceInt specializationService,
+                       //ProjectServiceInt projectService,
+                       NotificationServiceInt notificationService ) {
         this.userRepository = userRepository;
         this.confirmationService = confirmationService;
         this.passwordEncoder = passwordEncoder;
         this.specializationService = specializationService;
+        //this.projectService = projectService;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -44,7 +47,7 @@ public class UserService implements UserServiceInt {
                                 .password(passwordEncoder.encode(registrationDto.getPassword()))
                                 .build();
         userRepository.save(user);
-        confirmationService.deleteConfirmation(registrationDto.getEmail());
+        //confirmationService.deleteConfirmation(registrationDto.getEmail());
 
         return new AuthResponseDto();
     }
@@ -134,6 +137,40 @@ public class UserService implements UserServiceInt {
         user.setProfileImageLink(url);
 
         userRepository.save(user);
+    }
+
+    @Override
+    public void inviteUser(InviteUserForm inviteUserForm) {
+        User user = getUser(inviteUserForm.getUserId());
+       // Project project = projectService.getProject(inviteUserForm.getProjectId());
+        Notification notification = Notification.builder().date(new Date())
+       //                                 .project(project)
+                                        .user(user)
+                                        .type(0)
+                                        .build();
+
+        notificationService.addNotification(notification);
+    }
+
+    @Override
+    public void addUserToProject(InviteUserForm inviteUserForm) {
+        User user = getUser(inviteUserForm.getUserId());
+       // Project project = projectService.getProject(inviteUserForm.getProjectId());
+        if (!inviteUserForm.isResult()) {
+            //TODO перенести в нотификейшн контроллер и сервайс
+            Notification notification = Notification.builder()
+                                                        .message(user.getUsername() + " not go to you")
+                                                        .type(2)
+                                                        .user(user)
+          //                                              .project(project)
+                                                        .date(new Date())
+                                                        .build();
+            notificationService.addNotification(notification);
+            return;
+        }
+        //user.getProjects().add(project);
+        userRepository.save(user);
+
     }
 
     @Override
