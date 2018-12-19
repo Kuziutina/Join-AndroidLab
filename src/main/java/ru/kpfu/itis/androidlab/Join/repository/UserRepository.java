@@ -15,5 +15,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
             value = "SELECT * FROM _user WHERE username LIKE %:searchUsername%",
             nativeQuery = true
     )
-    public List<User> searchUsersByUsername(@Param("searchUsername") String searchUsername);
+    List<User> searchUsersByUsername(@Param("searchUsername") String searchUsername);
 }

@@ -46,7 +46,7 @@ public class UserService implements UserServiceInt {
                                 .email(registrationDto.getEmail())
                                 .password(passwordEncoder.encode(registrationDto.getPassword()))
                                 .build();
-        //userRepository.save(user);
+        userRepository.save(user);
         confirmationService.deleteConfirmation(registrationDto.getEmail());
 
         return new AuthResponseDto();
