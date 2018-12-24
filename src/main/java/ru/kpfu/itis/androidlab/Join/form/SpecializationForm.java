@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @EqualsAndHashCode
 public class SpecializationForm {
-    private String specializationName;
+    private String name;
     private Integer knowledgeLevel;
     private Integer experience;
     private String technologies;

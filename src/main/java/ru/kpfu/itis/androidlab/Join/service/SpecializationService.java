@@ -26,7 +26,7 @@ public class SpecializationService implements SpecializationServiceInt {
 
     public ResultForm update(Long id, SpecializationForm specializationForm) {
         Specialization specialization = specializationRepository.getOne(id);
-        SpecializationName specializationName = setTrueSpecializationName(specializationForm.getSpecializationName());
+        SpecializationName specializationName = setTrueSpecializationName(specializationForm.getName());
         Specialization repeatSpecialization = specializationRepository.findBySpecializationNameAndUser(specializationName, specialization.getUser());
 
         if (specialization.getUser() != null && repeatSpecialization != null && !repeatSpecialization.getId().equals(specialization.getId())) {
@@ -36,7 +36,7 @@ public class SpecializationService implements SpecializationServiceInt {
         specialization.setExperience(specializationForm.getExperience());
         specialization.setKnowledgeLevel(specializationForm.getKnowledgeLevel());
         specialization.setTechnologies(specializationForm.getTechnologies());
-        specialization.setSpecializationName(setTrueSpecializationName(specializationForm.getSpecializationName()));
+        specialization.setSpecializationName(setTrueSpecializationName(specializationForm.getName()));
 
         specializationRepository.save(specialization);
 
@@ -50,7 +50,7 @@ public class SpecializationService implements SpecializationServiceInt {
     }
 
     public ResultForm addSpecialization(User user, SpecializationForm specializationForm) {
-        SpecializationName specializationName = setTrueSpecializationName(specializationForm.getSpecializationName());
+        SpecializationName specializationName = setTrueSpecializationName(specializationForm.getName());
         Specialization repeatSpecialization = specializationRepository.findBySpecializationNameAndUser(specializationName, user);
 
         if (repeatSpecialization != null) {
@@ -71,7 +71,7 @@ public class SpecializationService implements SpecializationServiceInt {
 
     @Override
     public Specialization addSpecialization(Project project, SpecializationForm specializationForm) {
-        SpecializationName specializationName = setTrueSpecializationName(specializationForm.getSpecializationName());
+        SpecializationName specializationName = setTrueSpecializationName(specializationForm.getName());
 //        Specialization repeatSpecialization = specializationRepository.findBySpecializationName(specializationName);
 
         Specialization specialization = Specialization.builder()
