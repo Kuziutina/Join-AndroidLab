@@ -13,5 +13,4 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class InviteUserForm {
     private Long userId;
     private Long projectId;
-    private boolean result;
 }

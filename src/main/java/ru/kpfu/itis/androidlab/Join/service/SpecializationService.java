@@ -72,8 +72,9 @@ public class SpecializationService implements SpecializationServiceInt {
     @Override
     public Specialization addSpecialization(Project project, SpecializationForm specializationForm) {
         SpecializationName specializationName = setTrueSpecializationName(specializationForm.getName());
-//        Specialization repeatSpecialization = specializationRepository.findBySpecializationName(specializationName);
+        Specialization repeatSpecialization = specializationRepository.findBySpecializationNameAndProject(specializationName, project);
 
+        if (repeatSpecialization != null) return null;
         Specialization specialization = Specialization.builder()
                 .specializationName(specializationName)
                 .experience(specializationForm.getExperience())
@@ -83,13 +84,14 @@ public class SpecializationService implements SpecializationServiceInt {
                 .build();
         specializationRepository.save(specialization);
 
-        //TODO there don't need
         return specialization;
     }
 
     @Override
     public void deleteSpecialization(Project project) {
 //        specializationRepository.deleteAllByProject(project);
+
+        //TODO check this
         specializationRepository.deleteSpecializationsByProject(project);
     }
 

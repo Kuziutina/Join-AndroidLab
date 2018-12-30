@@ -2,12 +2,12 @@ package ru.kpfu.itis.androidlab.Join.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.kpfu.itis.androidlab.Join.form.AnswerNotificationForm;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.NotificationServiceInt;
 
-@Controller(value = "/notification")
+@RestController
+@RequestMapping(value = "/notification")
 public class NotificationController {
 
     private NotificationServiceInt notificationService;
@@ -17,7 +17,9 @@ public class NotificationController {
     }
 
     @PostMapping(value = "/{id}")
-    public ResponseEntity answerToNotification(@PathVariable Long id, AnswerNotificationForm answerForm) {
+    public ResponseEntity answerToNotification(@PathVariable Long id, @RequestBody AnswerNotificationForm answerForm) {
+        notificationService.answerNotification(id, answerForm);
+
         return ResponseEntity.ok().build();
     }
 

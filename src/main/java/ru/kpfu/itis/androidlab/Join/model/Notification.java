@@ -12,6 +12,14 @@ import java.util.Date;
 @Builder
 @Entity
 public class Notification {
+
+    // 0 - пригласил
+    // 1 - согласился/отказался
+    // 2 - попросился
+    // 3 - приняли/отклонили
+    // 4 - otkaz
+    // 5 - otklon
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;

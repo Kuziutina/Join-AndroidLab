@@ -5,11 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AnswerNotificationForm {
-    private long id;
-    private boolean answer;
+public class ImageResponse {
+    private String profileImage;
 }

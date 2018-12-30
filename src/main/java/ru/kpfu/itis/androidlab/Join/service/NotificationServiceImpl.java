@@ -1,28 +1,123 @@
 package ru.kpfu.itis.androidlab.Join.service;
 
 import org.springframework.stereotype.Service;
+import ru.kpfu.itis.androidlab.Join.dto.NotificationDto;
 import ru.kpfu.itis.androidlab.Join.form.AnswerNotificationForm;
 import ru.kpfu.itis.androidlab.Join.model.Notification;
+import ru.kpfu.itis.androidlab.Join.model.Project;
+import ru.kpfu.itis.androidlab.Join.model.User;
 import ru.kpfu.itis.androidlab.Join.repository.NotificationRepository;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.NotificationServiceInt;
+import ru.kpfu.itis.androidlab.Join.service.interfaces.ProjectServiceInt;
+
+import java.util.*;
 
 @Service
 public class NotificationServiceImpl implements NotificationServiceInt {
 
-    private NotificationRepository notificationRepository;
+    private static final String INVITE = "Пользователь %s приглашает вас присоедениться к проекту %s";                  //0
+    private static final String JOIN = "Пользователь %s хочет присоединиться к проекту %s";                             //2
+    private static final String YES_FROM_USER = "Пользователь %s принял ваше приглашение на вступление в проект %s";    //1
+    private static final String NO_FROM_USER = "Пользователь %s отклонил ваше приглашение на всупление в проект %s";    //1
+    private static final String YES_FROM_PROJECT = "Пользователь %s принял вашу заявку на вступление в проект %s";      //3
+    private static final String NO_FROM_PROJECT = "Пользователь %s отклонил вашу заявку на вступление в проект %s";     //3
+    private static final String YES_JOIN = "Вы приняли пользователя %s в проект %s";                                    //5
+    private static final String NO_JOIN = "Вы откланили заювку пользователя %s на вступление в проект %s";              //5
+    private static final String YES_INVITE = "Вы приняли приглашение на вступление в проект %s";                        //4
+    private static final String NO_INVITE = "Вы откланили приглашение на всупление в проект %s";                        //4
 
-    public NotificationServiceImpl(NotificationRepository notificationRepository) {
+    private NotificationRepository notificationRepository;
+    private ProjectServiceInt projectService;
+
+    public NotificationServiceImpl(NotificationRepository notificationRepository,
+                                   ProjectServiceInt projectService) {
         this.notificationRepository = notificationRepository;
+        this.projectService = projectService;
     }
 
     @Override
-    public void addNotification(Notification notification) {
+    public void addNotification(User user, Project project, int type)
+    {
+        Notification notification = Notification.builder().date(new Date())
+                .project(project)
+                .user(user)
+                .type(type)
+                .build();
+        if (type == 0) {
+            notification.setMessage(String.format(INVITE, project.getLeader().getUsername(), project.getTitle()));
+        }
+        else {
+            notification.setMessage(String.format(JOIN, user.getUsername(), project.getTitle()));
+        }
         notificationRepository.save(notification);
     }
 
     @Override
     public void answerNotification(Long id, AnswerNotificationForm answerNotificationForm) {
         Notification notification = notificationRepository.getOne(id);
-        //TODO i stop here
+        User user = notification.getUser();
+        Project project = notification.getProject();
+
+        Notification newNotification = Notification.builder().project(project)
+                                            .user(user)
+                                            .date(new Date())
+                                            .build();
+
+
+        if (notification.getType() == 0) {
+            newNotification.setType(1);
+            notification.setType(4);
+            if (answerNotificationForm.isAnswer()) {
+                projectService.addUserToProject(user, project);
+                newNotification.setMessage(String.format(YES_FROM_USER, user.getUsername(), project.getTitle()));
+                notification.setMessage(String.format(YES_INVITE, project.getTitle()));
+            }
+            else {
+                newNotification.setMessage(String.format(NO_FROM_USER, user.getUsername(), project.getTitle()));
+                notification.setMessage(String.format(NO_INVITE, project.getTitle()));
+            }
+        }
+        else if (notification.getType() == 2) {
+            newNotification.setType(3);
+            notification.setType(5);
+            if (answerNotificationForm.isAnswer()) {
+                projectService.addUserToProject(user, project);
+                newNotification.setMessage(String.format(YES_FROM_PROJECT, user.getUsername(), project.getTitle()));
+                notification.setMessage(String.format(YES_JOIN, user.getUsername(), project.getTitle()));
+            }
+            else {
+                newNotification.setMessage(String.format(NO_FROM_PROJECT, user.getUsername(), project.getTitle()));
+                notification.setMessage(String.format(NO_JOIN, user.getUsername(), project.getTitle()));
+            }
+        }
+
+        notificationRepository.save(notification);
+        notificationRepository.save(newNotification);
     }
+
+    @Override
+    public List<NotificationDto> getUserNotificationDtos(User user) {
+        List<Notification> notifications = getUserNotification(user);
+        List<NotificationDto> notificationDtos = new ArrayList<>();
+        if (notifications != null) {
+            for (Notification notification: notifications) {
+                notificationDtos.add(NotificationDto.from(notification));
+            }
+        }
+
+        return notificationDtos;
+    }
+
+    private List<Notification> getUserNotification(User user) {
+        List<Project> projects = projectService.getUserOwnerProjects(user);
+        List<Notification> notifications = new ArrayList<>();
+        List<Notification> buf = notificationRepository.findAllByTypeInAndUser(Arrays.asList(0,2,4), user);
+        if (buf != null) notifications.addAll(buf);
+        buf = notificationRepository.findAllByTypeInAndProjectIn(Arrays.asList(1,3,5),projects);
+        if (buf != null) notifications.addAll(buf);
+
+        return notifications;
+    }
+
+//    private Notification createNotification(String text, )
 }

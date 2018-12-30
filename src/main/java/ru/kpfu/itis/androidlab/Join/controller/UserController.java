@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.kpfu.itis.androidlab.Join.dto.NotificationDto;
 import ru.kpfu.itis.androidlab.Join.dto.SimpleProjectDto;
 import ru.kpfu.itis.androidlab.Join.dto.SimpleUserDto;
 import ru.kpfu.itis.androidlab.Join.dto.UserDto;
@@ -110,7 +111,7 @@ public class UserController extends MainController{
             e.printStackTrace();
         }
 
-        return ResponseEntity.ok(url);
+        return ResponseEntity.ok(new ImageResponse(url));
     }
 
 
@@ -119,6 +120,13 @@ public class UserController extends MainController{
         List<SimpleProjectDto> projects = projectService.getUserProjectDtos(id);
 
         return ResponseEntity.ok(projects);
+    }
+
+    @GetMapping(value = "/{id}/notifications")
+    public ResponseEntity userNotification(@PathVariable Long id) {
+        List<NotificationDto> notificationDtos = userService.getUserNotifications(id);
+
+        return ResponseEntity.ok(notificationDtos);
     }
 
     @GetMapping(value = "/search")
@@ -131,19 +139,13 @@ public class UserController extends MainController{
         return ResponseEntity.ok(userDtos);
     }
 
-    @PostMapping(value = "/invite/response")
+    @PostMapping(value = "/invite")
     public ResponseEntity inviteUser(@RequestBody InviteUserForm inviteUserForm) {
 
-        userService.inviteUser(inviteUserForm);
+        projectService.inviteUser(inviteUserForm);
 
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value = "/invite")
-    public ResponseEntity addUserToProject(@RequestBody InviteUserForm inviteUserForm) {
-        userService.addUserToProject(inviteUserForm);
-
-        return ResponseEntity.ok().build();
-    }
 
 }

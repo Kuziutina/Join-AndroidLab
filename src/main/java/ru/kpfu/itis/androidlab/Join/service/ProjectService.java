@@ -1,16 +1,16 @@
 package ru.kpfu.itis.androidlab.Join.service;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import ru.kpfu.itis.androidlab.Join.dto.ProjectDto;
 import ru.kpfu.itis.androidlab.Join.dto.SimpleProjectDto;
+import ru.kpfu.itis.androidlab.Join.form.InviteUserForm;
 import ru.kpfu.itis.androidlab.Join.form.ProfileForm;
 import ru.kpfu.itis.androidlab.Join.form.ProjectForm;
 import ru.kpfu.itis.androidlab.Join.form.SpecializationForm;
-import ru.kpfu.itis.androidlab.Join.model.Project;
-import ru.kpfu.itis.androidlab.Join.model.Specialization;
-import ru.kpfu.itis.androidlab.Join.model.SpecializationName;
-import ru.kpfu.itis.androidlab.Join.model.User;
+import ru.kpfu.itis.androidlab.Join.model.*;
 import ru.kpfu.itis.androidlab.Join.repository.ProjectRepository;
+import ru.kpfu.itis.androidlab.Join.service.interfaces.NotificationServiceInt;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.ProjectServiceInt;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.SpecializationServiceInt;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.UserServiceInt;
@@ -24,26 +24,35 @@ public class ProjectService implements ProjectServiceInt {
     private UserServiceInt userService;
     private SpecializationServiceInt specializationService;
     private ProjectRepository projectRepository;
+    private NotificationServiceInt notificationService;
 
-    public ProjectService(UserServiceInt userService, ProjectRepository projectRepository, SpecializationServiceInt specializationService) {
+    public ProjectService(UserServiceInt userService,
+                          ProjectRepository projectRepository,
+                          SpecializationServiceInt specializationService,
+                          @Lazy NotificationServiceInt notificationService) {
         this.userService = userService;
         this.projectRepository = projectRepository;
         this.specializationService = specializationService;
+        this.notificationService = notificationService;
     }
 
-    private List<Project> getUserProject(Long userId) {
-
+    private List<Project> getUserProjects(Long userId) {
         User user = userService.getUser(userId);
         return projectRepository.findAllByParticipantsOrLeader(user, user);
     }
 
     @Override
-    public List<SimpleProjectDto> getUserProjectDtos(Long id) {
-        List<Project> projects = getUserProject(id);
-        List<SimpleProjectDto> projectDtos = new ArrayList<>();
+    public List<Project> getUserOwnerProjects(User user) {
+        return projectRepository.findAllByLeader(user);
+    }
+
+    @Override
+    public List<ProjectDto> getUserProjectDtos(Long id) {
+        List<Project> projects = getUserProjects(id);
+        List<ProjectDto> projectDtos = new ArrayList<>();
         if (projects != null) {
             for (Project project: projects) {
-                projectDtos.add(SimpleProjectDto.from(project));
+                projectDtos.add(ProjectDto.from(project));
             }
         }
 
@@ -143,6 +152,28 @@ public class ProjectService implements ProjectServiceInt {
 
     }
 
+    @Override
+    public void addUserToProject(User user, Project project) {
+        project.getParticipants().add(user);
+        projectRepository.save(project);
+    }
+
+    @Override
+    public void inviteUser(InviteUserForm inviteUserForm) {
+        User user = userService.getUser(inviteUserForm.getUserId());
+        Project project = getProject(inviteUserForm.getProjectId());
+
+        notificationService.addNotification(user, project, 0);
+    }
+
+    @Override
+    public void joinRequest(InviteUserForm inviteUserForm) {
+        User user = userService.getUser(inviteUserForm.getUserId());
+        Project project = getProject(inviteUserForm.getProjectId());
+
+        notificationService.addNotification(user, project, 2);
+    }
+
 
     private Project getProject(ProjectForm projectForm) {
         User user = userService.getUser(projectForm.getUserId());
@@ -153,7 +184,6 @@ public class ProjectService implements ProjectServiceInt {
         projectRepository.save(project);
 
         Specialization specialization;
-        //TODO return null, don't need, no it's need
         project.setVacancies(new ArrayList<>());
         for (SpecializationForm specializationForm: projectForm.getVacancies()) {
             specialization = specializationService.addSpecialization(project, specializationForm);

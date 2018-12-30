@@ -1,6 +1,7 @@
 package ru.kpfu.itis.androidlab.Join.service;
 
 import com.google.common.hash.Hashing;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.kpfu.itis.androidlab.Join.dto.*;
@@ -31,7 +32,7 @@ public class UserService implements UserServiceInt {
                        PasswordEncoder passwordEncoder,
                        SpecializationServiceInt specializationService,
                        //ProjectServiceInt projectService,
-                       NotificationServiceInt notificationService ) {
+                       @Lazy NotificationServiceInt notificationService ) {
         this.userRepository = userRepository;
         this.confirmationService = confirmationService;
         this.passwordEncoder = passwordEncoder;
@@ -140,37 +141,9 @@ public class UserService implements UserServiceInt {
     }
 
     @Override
-    public void inviteUser(InviteUserForm inviteUserForm) {
-        User user = getUser(inviteUserForm.getUserId());
-       // Project project = projectService.getProject(inviteUserForm.getProjectId());
-        Notification notification = Notification.builder().date(new Date())
-       //                                 .project(project)
-                                        .user(user)
-                                        .type(0)
-                                        .build();
-
-        notificationService.addNotification(notification);
-    }
-
-    @Override
-    public void addUserToProject(InviteUserForm inviteUserForm) {
-        User user = getUser(inviteUserForm.getUserId());
-       // Project project = projectService.getProject(inviteUserForm.getProjectId());
-        if (!inviteUserForm.isResult()) {
-            //TODO перенести в нотификейшн контроллер и сервайс
-            Notification notification = Notification.builder()
-                                                        .message(user.getUsername() + " not go to you")
-                                                        .type(2)
-                                                        .user(user)
-          //                                              .project(project)
-                                                        .date(new Date())
-                                                        .build();
-            notificationService.addNotification(notification);
-            return;
-        }
-        //user.getProjects().add(project);
-        userRepository.save(user);
-
+    public List<NotificationDto> getUserNotifications(Long id) {
+        User user = getUser(id);
+        return notificationService.getUserNotificationDtos(user);
     }
 
     @Override

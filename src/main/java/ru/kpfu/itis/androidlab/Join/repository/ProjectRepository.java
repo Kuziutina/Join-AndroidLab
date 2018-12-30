@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
     List<Project> findAllByParticipantsOrLeader(User user, User user1);
+    List<Project> findAllByLeader(User user);
 
     @Query(
             value = "SELECT * FROM project WHERE title LIKE %:searchTitle%",

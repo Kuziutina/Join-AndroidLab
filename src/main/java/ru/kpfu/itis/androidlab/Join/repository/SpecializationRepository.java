@@ -7,8 +7,9 @@ import ru.kpfu.itis.androidlab.Join.model.SpecializationName;
 import ru.kpfu.itis.androidlab.Join.model.User;
 
 public interface SpecializationRepository extends JpaRepository<Specialization, Long> {
-    public Specialization findBySpecializationNameAndUser(SpecializationName name, User user);
-    public void deleteAllByProject(Project project);
+    Specialization findBySpecializationNameAndUser(SpecializationName name, User user);
+    Specialization findBySpecializationNameAndProject(SpecializationName name, Project project);
+    void deleteAllByProject(Project project);
     void deleteSpecializationsByProject(Project project);
     void deleteSpecializationsByUser(User user);
 }

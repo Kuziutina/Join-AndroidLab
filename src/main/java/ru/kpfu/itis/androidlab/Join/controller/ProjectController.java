@@ -4,6 +4,8 @@ import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kpfu.itis.androidlab.Join.dto.ProjectDto;
+import ru.kpfu.itis.androidlab.Join.dto.SimpleProjectDto;
+import ru.kpfu.itis.androidlab.Join.form.InviteUserForm;
 import ru.kpfu.itis.androidlab.Join.form.ProjectForm;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.ProjectServiceInt;
 
@@ -25,7 +27,7 @@ public class ProjectController {
                                          @RequestParam(value = "vacancy_name", required = false) String vacancyName,
                                          @RequestParam(value = "knowledge_level", required = false) Integer level,
                                          @RequestParam(value = "experience", required = false) Integer experience) {
-        List<ProjectDto> projectDtos = projectService.findProjectDtos(name, vacancyName, level, experience);
+        List<SimpleProjectDto> projectDtos = projectService.findProjectDtos(name, vacancyName, level, experience);
 
         return ResponseEntity.ok(projectDtos);
     }
@@ -50,4 +52,12 @@ public class ProjectController {
 
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping(value = "/join")
+    public ResponseEntity joinProject(@RequestBody InviteUserForm inviteUserForm) {
+        projectService.joinRequest(inviteUserForm);
+
+        return ResponseEntity.ok().build();
+    }
+
 }

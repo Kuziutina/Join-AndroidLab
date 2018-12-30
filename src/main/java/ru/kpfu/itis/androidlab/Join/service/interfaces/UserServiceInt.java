@@ -1,5 +1,6 @@
 package ru.kpfu.itis.androidlab.Join.service.interfaces;
 
+import ru.kpfu.itis.androidlab.Join.dto.NotificationDto;
 import ru.kpfu.itis.androidlab.Join.dto.SimpleUserDto;
 import ru.kpfu.itis.androidlab.Join.dto.UserDto;
 import ru.kpfu.itis.androidlab.Join.form.*;
@@ -18,8 +19,7 @@ public interface UserServiceInt {
     void changeUserPassword(ChangePasswordForm changePasswordForm);
     void addProfileImage(String url, Long id);
 
-    void inviteUser(InviteUserForm inviteUserForm);
-    void addUserToProject(InviteUserForm inviteUserForm);
+    List<NotificationDto> getUserNotifications(Long id);
 
     List<SimpleUserDto> findUserDtos(String username, String vacancyName, Integer level, Integer experience);
 }
