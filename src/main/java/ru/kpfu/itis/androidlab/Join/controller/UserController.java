@@ -9,10 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.kpfu.itis.androidlab.Join.dto.NotificationDto;
-import ru.kpfu.itis.androidlab.Join.dto.SimpleProjectDto;
-import ru.kpfu.itis.androidlab.Join.dto.SimpleUserDto;
-import ru.kpfu.itis.androidlab.Join.dto.UserDto;
+import ru.kpfu.itis.androidlab.Join.dto.*;
 import ru.kpfu.itis.androidlab.Join.form.*;
 import ru.kpfu.itis.androidlab.Join.model.User;
 import ru.kpfu.itis.androidlab.Join.repository.UserRepository;
@@ -117,7 +114,7 @@ public class UserController extends MainController{
 
     @GetMapping(value = "/{id}/projects")
     public ResponseEntity userProject(@PathVariable Long id) {
-        List<SimpleProjectDto> projects = projectService.getUserProjectDtos(id);
+        List<ProjectDto> projects = projectService.getUserProjectDtos(id);
 
         return ResponseEntity.ok(projects);
     }

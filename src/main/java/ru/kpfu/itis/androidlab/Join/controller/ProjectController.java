@@ -27,7 +27,7 @@ public class ProjectController {
                                          @RequestParam(value = "vacancy_name", required = false) String vacancyName,
                                          @RequestParam(value = "knowledge_level", required = false) Integer level,
                                          @RequestParam(value = "experience", required = false) Integer experience) {
-        List<SimpleProjectDto> projectDtos = projectService.findProjectDtos(name, vacancyName, level, experience);
+        List<ProjectDto> projectDtos = projectService.findProjectDtos(name, vacancyName, level, experience);
 
         return ResponseEntity.ok(projectDtos);
     }
