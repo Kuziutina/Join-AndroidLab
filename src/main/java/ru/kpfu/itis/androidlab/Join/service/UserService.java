@@ -102,11 +102,11 @@ public class UserService implements UserServiceInt {
     public ResultForm updateWithSpec(Long id, ProfileForm profileForm) {
         User user = getUser(id);
         User checkUser = userRepository.findUserByUsername(profileForm.getUsername());
-        if (checkUser != null && !user.equals(checkUser)) {
+        if (checkUser != null && !checkUser.getId().equals(id)) {
             return ResultForm.builder().code(400).error("Invalid username").build();
         }
         checkUser = userRepository.findUserByEmail(profileForm.getEmail());
-        if (checkUser != null && !user.equals(checkUser)) {
+        if (checkUser != null && !checkUser.getId().equals(id)) {
             return ResultForm.builder().code(400).error("Invalid email").build();
         }
         user.setName(profileForm.getName());
