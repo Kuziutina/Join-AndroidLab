@@ -17,8 +17,8 @@ import java.util.Date;
 public class NotificationDto {
     Long id;
 //    String message;
-    Project project;
-    User user;
+    SimpleProjectDto project;
+    SimpleUserDto user;
     Integer type;
     Date date;
     boolean seeing;
@@ -28,18 +28,13 @@ public class NotificationDto {
 //        this.message = notification.getMessage();
         this.type = notification.getType();
 
-        this.project = new Project();
-        this.project.setId(notification.getProject().getId());
-        this.project.setTitle(notification.getProject().getTitle());
+        this.project = SimpleProjectDto.from(notification.getProject());
 
-        this.user = new User();
         if (type == 0 || type == 3 || type == 5) {
-            this.user.setId(notification.getProject().getLeader().getId());
-            this.user.setUsername(notification.getProject().getLeader().getUsername());
+            this.user = SimpleUserDto.from(notification.getProject().getLeader());
         }
         else {
-            this.user.setId(notification.getUser().getId());
-            this.user.setUsername(notification.getUser().getUsername());
+            this.user = SimpleUserDto.from(notification.getUser());
         }
         this.date = notification.getDate();
         this.seeing = notification.isSeeing();
