@@ -139,7 +139,7 @@ public class ProjectService implements ProjectServiceInt {
             else if (justJoined != null && justJoined.contains(project)) {
                 simpleProjectDto.setStatus(3);
             }
-            projectDtos.add(SimpleProjectDto.from(project));
+            projectDtos.add(simpleProjectDto);
         }
 
         return projectDtos;
