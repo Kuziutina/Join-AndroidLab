@@ -152,13 +152,13 @@ public class UserService implements UserServiceInt {
         List<User> justThere;
         List<User> justInvited;
         List<User> justJoined;
-        users.remove(projectService.getLeader(projectId));
         if (projectId == null) {
             justThere = new ArrayList<>();
             justInvited = new ArrayList<>();
             justJoined = new ArrayList<>();
         }
         else {
+            users.remove(projectService.getLeader(projectId));
             justThere = projectService.getAllParticipants(projectId);
             justInvited = notificationService.getInvitedUser(projectId);
             justJoined = notificationService.getJoinedUser(projectId);
