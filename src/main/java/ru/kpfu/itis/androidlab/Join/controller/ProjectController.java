@@ -2,7 +2,9 @@ package ru.kpfu.itis.androidlab.Join.controller;
 
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import ru.kpfu.itis.androidlab.Join.details.CustomUserDetails;
 import ru.kpfu.itis.androidlab.Join.dto.ProjectDto;
 import ru.kpfu.itis.androidlab.Join.dto.SimpleProjectDto;
 import ru.kpfu.itis.androidlab.Join.form.InviteUserForm;
@@ -26,9 +28,9 @@ public class ProjectController {
     public ResponseEntity getAllProjects(@RequestParam(value = "name", required = false) String name,
                                          @RequestParam(value = "vacancy_name", required = false) String vacancyName,
                                          @RequestParam(value = "knowledge_level", required = false) Integer level,
-                                         @RequestParam(value = "experience", required = false) Integer experience) {
-        List<ProjectDto> projectDtos = projectService.findProjectDtos(name, vacancyName, level, experience);
-
+                                         @RequestParam(value = "experience", required = false) Integer experience,
+                                         Authentication authentication) {
+        List<SimpleProjectDto> projectDtos = projectService.findProjectDtos(name, vacancyName, level, experience, (CustomUserDetails) authentication.getPrincipal());
         return ResponseEntity.ok(projectDtos);
     }
 

@@ -2,6 +2,7 @@ package ru.kpfu.itis.androidlab.Join.service;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import ru.kpfu.itis.androidlab.Join.details.CustomUserDetails;
 import ru.kpfu.itis.androidlab.Join.dto.ProjectDto;
 import ru.kpfu.itis.androidlab.Join.dto.SimpleProjectDto;
 import ru.kpfu.itis.androidlab.Join.form.InviteUserForm;
@@ -70,8 +71,8 @@ public class ProjectService implements ProjectServiceInt {
     }
 
     @Override
-    public List<ProjectDto> findProjectDtos(String name, String vacancyName, Integer knowledgeLevel, Integer experience) {
-
+    public List<SimpleProjectDto> findProjectDtos(String name, String vacancyName, Integer knowledgeLevel, Integer experience, CustomUserDetails principal) {
+        User user = userService.getUser(principal.getId());
         //КОСТЫЫЫЫЛЬ TODO fix it
 
         List<Project> projects;
@@ -115,10 +116,15 @@ public class ProjectService implements ProjectServiceInt {
             result = projects;
         }
 
-        List<ProjectDto> projectDtos = new ArrayList<>();
-
+        List<SimpleProjectDto> projectDtos = new ArrayList<>();
+//        List<Project> justThere = get
+        SimpleProjectDto simpleProjectDto;
         for (Project project: result) {
-            projectDtos.add(ProjectDto.from(project));
+            simpleProjectDto = SimpleProjectDto.from(project);
+            if (project.getLeader().equals(user) || project.getParticipants().contains(user)) {
+                simpleProjectDto.setStatus(1);
+            }
+            projectDtos.add(SimpleProjectDto.from(project));
         }
 
         return projectDtos;

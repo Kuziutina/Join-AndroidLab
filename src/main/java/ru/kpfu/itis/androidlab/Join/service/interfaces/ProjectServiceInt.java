@@ -1,6 +1,8 @@
 package ru.kpfu.itis.androidlab.Join.service.interfaces;
 
+import ru.kpfu.itis.androidlab.Join.details.CustomUserDetails;
 import ru.kpfu.itis.androidlab.Join.dto.ProjectDto;
+import ru.kpfu.itis.androidlab.Join.dto.SimpleProjectDto;
 import ru.kpfu.itis.androidlab.Join.form.InviteUserForm;
 import ru.kpfu.itis.androidlab.Join.form.ProjectForm;
 import ru.kpfu.itis.androidlab.Join.model.Project;
@@ -15,7 +17,7 @@ public interface ProjectServiceInt {
     ProjectDto getProjectDto(Long id);
     Project getProject(Long id);
 
-    List<ProjectDto> findProjectDtos(String name, String vacancyName, Integer knowledgeLevel, Integer experience);
+    List<SimpleProjectDto> findProjectDtos(String name, String vacancyName, Integer knowledgeLevel, Integer experience, CustomUserDetails principal);
 
     Long createProject(ProjectForm projectForm);
     void changeProject(Long id, ProjectForm projectForm);

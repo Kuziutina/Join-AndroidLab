@@ -24,6 +24,7 @@ public class ImageHelper {
     }
 
     public String uploadImage(MultipartFile file) {
+        cloudinary = getInstance();
         String url = null;
         Map uploadResult = null;
         if (file.isEmpty()) {
@@ -41,7 +42,7 @@ public class ImageHelper {
     }
 
     public boolean deleteImage(String url) {
-
+        cloudinary = getInstance();
         try {
             cloudinary.uploader().destroy(url, ObjectUtils.emptyMap());
         } catch (IOException e) {

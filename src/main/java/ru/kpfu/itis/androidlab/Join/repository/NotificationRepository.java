@@ -15,4 +15,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
 //    @Query("select n from Notification n where n.type = ?1 and n.project ")
     List<Notification> findAllByTypeAndProject(Integer type, Project project);
+
+    List<Notification> findAllByTypeAndUser(Integer type, User user);
 }

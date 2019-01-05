@@ -19,6 +19,7 @@ public class SimpleProjectDto {
     private Long id;
     private String name;
     private String description;
+    private Integer status;
     private SimpleUserDto leader;
 //    private List<SimpleUserDto> participants;
     private List<SpecializationDto> vacancies;
@@ -28,6 +29,7 @@ public class SimpleProjectDto {
         this.name = project.getTitle();
         this.description = project.getDescription();
         this.leader = SimpleUserDto.from(project.getLeader());
+        this.status = 0;
 
         /*if (project.getParticipants() != null) {
             participants = new ArrayList<>();
@@ -35,6 +37,7 @@ public class SimpleProjectDto {
                 participants.add(SimpleUserDto.from(user));
             }
         }*/
+
 
         if (project.getVacancies() != null) {
             vacancies = new ArrayList<>();
