@@ -25,4 +25,8 @@ public interface ProjectServiceInt {
     void inviteUser(InviteUserForm inviteUserForm);
 
     void joinRequest(InviteUserForm inviteUserForm);
+
+    List<User> getAllParticipants(Long projectId);
+
+    User getLeader(Long projectId);
 }

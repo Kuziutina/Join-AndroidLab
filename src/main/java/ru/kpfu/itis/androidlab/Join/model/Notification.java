@@ -13,9 +13,9 @@ import java.util.Date;
 @Entity
 public class Notification {
 
-    // 0 - пригласил
-    // 1 - согласился/отказался
-    // 2 - попросился
+    // 0 - пригласил  (кто пригласил, куда пригласил)
+    // 1 - согласился/отказался (Кто согласился/отказался, куда)
+    // 2 - попросился  (кто попросился, куда попросился)
     // 3 - приняли/отклонили
     // 4 - otkaz
     // 5 - otklon
@@ -32,7 +32,7 @@ public class Notification {
     @JoinColumn(name = "project_id", referencedColumnName = "id")
     private Project project;
 
-    private String message;
+//    private String message;
 
     private Integer type;
 

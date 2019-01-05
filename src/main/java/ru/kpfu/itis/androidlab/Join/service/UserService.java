@@ -1,20 +1,17 @@
 package ru.kpfu.itis.androidlab.Join.service;
 
-import com.google.common.hash.Hashing;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ru.kpfu.itis.androidlab.Join.dto.*;
 import ru.kpfu.itis.androidlab.Join.form.*;
+import ru.kpfu.itis.androidlab.Join.helper.ImageHelper;
 import ru.kpfu.itis.androidlab.Join.model.*;
 import ru.kpfu.itis.androidlab.Join.repository.UserRepository;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.*;
-import ru.kpfu.itis.androidlab.Join.util.EmailSender;
-import ru.kpfu.itis.androidlab.Join.util.Generator;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -24,21 +21,24 @@ public class UserService implements UserServiceInt {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
     private SpecializationServiceInt specializationService;
-   // private ProjectServiceInt projectService;
+    private ProjectServiceInt projectService;
     private NotificationServiceInt notificationService;
+    private ImageHelper imageHelper;
 
     public UserService(UserRepository userRepository,
                        ConfirmationServiceInt confirmationService,
                        PasswordEncoder passwordEncoder,
                        SpecializationServiceInt specializationService,
-                       //ProjectServiceInt projectService,
-                       @Lazy NotificationServiceInt notificationService ) {
+                       @Lazy ProjectServiceInt projectService,
+                       @Lazy NotificationServiceInt notificationService,
+                       ImageHelper imageHelper) {
         this.userRepository = userRepository;
         this.confirmationService = confirmationService;
         this.passwordEncoder = passwordEncoder;
         this.specializationService = specializationService;
-        //this.projectService = projectService;
+        this.projectService = projectService;
         this.notificationService = notificationService;
+        this.imageHelper = imageHelper;
     }
 
     @Override
@@ -147,13 +147,53 @@ public class UserService implements UserServiceInt {
     }
 
     @Override
-    public List<SimpleUserDto> findUserDtos(String username, String vacancyName, Integer level, Integer experience) {
+    public List<SimpleUserDto> findUserDtos(String username, String vacancyName, Integer level, Integer experience, Long projectId) {
         List<User> users = findUsers(username, vacancyName, level, experience);
+        users.remove(projectService.getLeader(projectId));
+        List<User> justThere = projectService.getAllParticipants(projectId);
+        List<User> justInvited = notificationService.getInvitedUser(projectId);
+        List<User> justJoined = notificationService.getJoinedUser(projectId);
         List<SimpleUserDto> userDtos = new ArrayList<>();
+
+        SimpleUserDto simpleUserDto;
         for (User user: users) {
-            userDtos.add(SimpleUserDto.from(user));
+            simpleUserDto = SimpleUserDto.from(user);
+            if (justThere.contains(user)) {
+                simpleUserDto.setStatus(1);
+            }
+            else if (justInvited.contains(user)) {
+                simpleUserDto.setStatus(2);
+            }
+            else if (justJoined.contains(user)) {
+                simpleUserDto.setStatus(3);
+            }
+            userDtos.add(simpleUserDto);
         }
         return userDtos;
+    }
+
+    @Override
+    public String imageUpload(MultipartFile multipartFile, Long userId) {
+        String url = imageHelper.uploadImage(multipartFile);
+        if (url != null) {
+            User user = getUser(userId);
+            if (user.getProfileImageLink() != null) imageHelper.deleteImage(user.getProfileImageLink());
+            user.setProfileImageLink(url);
+            userRepository.save(user);
+        }
+
+        return url;
+    }
+
+    @Override
+    public boolean deleteImage(Long userId) {
+        User user = getUser(userId);
+        if (user.getProfileImageLink() != null && imageHelper.deleteImage(user.getProfileImageLink())) {
+            user.setProfileImageLink(null);
+            return true;
+        }
+
+        return false;
     }
 
     private List<User> findUsers(String username, String vacancyName, Integer level, Integer experience) {

@@ -14,4 +14,8 @@ public interface NotificationServiceInt {
     void answerNotification(Long id, AnswerNotificationForm answerNotificationForm);
 
     List<NotificationDto> getUserNotificationDtos(User user);
+
+    List<User> getInvitedUser(Long projectId);
+
+    List<User> getJoinedUser(Long projectId);
 }

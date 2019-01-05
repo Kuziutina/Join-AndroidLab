@@ -22,7 +22,7 @@ public class NotificationHelper {
 
     public ResponseEntity<String> send(User user, Notification notification) {
         JSONObject body = new JSONObject();
-//        body.put("device", user.getDevice());
+//        body.put("to", user.getDeviceToken());
         body.put("priority", "high");
 
         JSONObject notification_body = new JSONObject();

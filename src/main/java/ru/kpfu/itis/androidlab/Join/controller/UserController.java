@@ -84,31 +84,25 @@ public class UserController extends MainController{
     @SuppressWarnings("rawtypes")
     @PostMapping(value = "/{id}/upload")
     public ResponseEntity singleFileUpload(@RequestParam("file") MultipartFile file, @PathVariable Long id) {
-        String url = null;
-        Map uploadResult = null;
-        if (file.isEmpty()) {
-            //TODO error
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.add("error", "file is empty");
-            return ResponseEntity.status(400).headers(httpHeaders).build();
-        }
-        try {
-
-            Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-                    "cloud_name", "dnl4u0eua",
-                    "api_key", "241562529735436",
-                    "api_secret", "zcu8PHeXQRjPAXjUUb8nqIyNzzE"));
-
-            uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap("resource_type", "auto"));
-
-            url = (String) uploadResult.get("url");
-            userService.addProfileImage(url, id);
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        String url = userService.imageUpload(file, id);
+        if (url == null) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("error", "image did not load");
+            return ResponseEntity.status(400).headers(headers).build();
         }
 
         return ResponseEntity.ok(new ImageResponse(url));
+    }
+
+    @DeleteMapping(value = "/{id}/profileImage")
+    public ResponseEntity deleteProfileImage(@PathVariable Long userId) {
+        if (userService.deleteImage(userId)) {
+            return ResponseEntity.ok().build();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("error", "inafe doesn't exist");
+        return ResponseEntity.status(400).headers(headers).build();
     }
 
 
@@ -130,8 +124,9 @@ public class UserController extends MainController{
     public ResponseEntity searchUser(@RequestParam(value = "username", required = false) String username,
                                      @RequestParam(value = "specialization_name", required = false) String vacancyName,
                                      @RequestParam(value = "knowledge_level", required = false) Integer level,
-                                     @RequestParam(value = "experience", required = false) Integer experience) {
-        List<SimpleUserDto> userDtos = userService.findUserDtos(username, vacancyName, level, experience);
+                                     @RequestParam(value = "experience", required = false) Integer experience,
+                                     @RequestParam(value = "project_id", required = false) Long projectId) {
+        List<SimpleUserDto> userDtos = userService.findUserDtos(username, vacancyName, level, experience, projectId);
 
         return ResponseEntity.ok(userDtos);
     }

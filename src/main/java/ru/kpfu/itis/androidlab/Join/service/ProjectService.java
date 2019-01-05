@@ -174,6 +174,22 @@ public class ProjectService implements ProjectServiceInt {
         notificationService.addNotification(user, project, 2);
     }
 
+    @Override
+    public List<User> getAllParticipants(Long projectId) {
+        Project project = getProject(projectId);
+        List<User> users = project.getParticipants();
+        users.add(project.getLeader());
+
+        return users;
+    }
+
+    @Override
+    public User getLeader(Long projectId) {
+        Project project = getProject(projectId);
+
+        return project.getLeader();
+    }
+
 
     private Project getProject(ProjectForm projectForm) {
         User user = userService.getUser(projectForm.getUserId());

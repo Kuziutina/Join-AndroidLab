@@ -1,5 +1,6 @@
 package ru.kpfu.itis.androidlab.Join.service.interfaces;
 
+import org.springframework.web.multipart.MultipartFile;
 import ru.kpfu.itis.androidlab.Join.dto.NotificationDto;
 import ru.kpfu.itis.androidlab.Join.dto.SimpleUserDto;
 import ru.kpfu.itis.androidlab.Join.dto.UserDto;
@@ -21,5 +22,9 @@ public interface UserServiceInt {
 
     List<NotificationDto> getUserNotifications(Long id);
 
-    List<SimpleUserDto> findUserDtos(String username, String vacancyName, Integer level, Integer experience);
+    List<SimpleUserDto> findUserDtos(String username, String vacancyName, Integer level, Integer experience, Long projectId);
+
+    String imageUpload(MultipartFile multipartFile, Long userId);
+
+    boolean deleteImage(Long userId);
 }
