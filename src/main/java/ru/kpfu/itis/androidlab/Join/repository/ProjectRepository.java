@@ -9,7 +9,7 @@ import ru.kpfu.itis.androidlab.Join.model.User;
 import java.util.List;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    List<Project> findAllByParticipantsOrLeader(User user, User user1);
+    List<Project> findAllByParticipantsContainsOrLeader(User user, User user1);
     List<Project> findAllByLeader(User user);
 
     @Query(

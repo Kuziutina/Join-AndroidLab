@@ -112,8 +112,27 @@ public class NotificationServiceImpl implements NotificationServiceInt {
         return users;
     }
 
-    /*@Override
-    public List<Project> getProje*/
+    @Override
+    public List<Project> getProjectUserJoined(User user) {
+        List<Notification> notifications = notificationRepository.findAllByTypeAndUser(2, user);
+        List<Project> projects = new ArrayList<>();
+        for (Notification notification: notifications) {
+            projects.add(notification.getProject());
+        }
+
+        return projects;
+    }
+
+    @Override
+    public List<Project> getProjectUserInvited(User user) {
+        List<Notification> notifications = notificationRepository.findAllByTypeAndUser(0, user);
+        List<Project> projects = new ArrayList<>();
+        for (Notification notification: notifications) {
+            projects.add(notification.getProject());
+        }
+
+        return projects;
+    }
 
     private List<Notification> getUserNotification(User user) {
         List<Project> projects = projectService.getUserOwnerProjects(user);

@@ -2,7 +2,6 @@ package ru.kpfu.itis.androidlab.Join.service;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import ru.kpfu.itis.androidlab.Join.details.CustomUserDetails;
 import ru.kpfu.itis.androidlab.Join.dto.ProjectDto;
 import ru.kpfu.itis.androidlab.Join.dto.SimpleProjectDto;
 import ru.kpfu.itis.androidlab.Join.form.InviteUserForm;
@@ -39,7 +38,7 @@ public class ProjectService implements ProjectServiceInt {
 
     private List<Project> getUserProjects(Long userId) {
         User user = userService.getUser(userId);
-        return projectRepository.findAllByParticipantsOrLeader(user, user);
+        return projectRepository.findAllByParticipantsContainsOrLeader(user, user);
     }
 
     @Override
@@ -71,8 +70,11 @@ public class ProjectService implements ProjectServiceInt {
     }
 
     @Override
-    public List<SimpleProjectDto> findProjectDtos(String name, String vacancyName, Integer knowledgeLevel, Integer experience) {
-        //User user = userService.getUser(principal.getId());
+    public List<SimpleProjectDto> findProjectDtos(String name, String vacancyName, Integer knowledgeLevel, Integer experience, String principal) {
+        User user = null;
+        if (principal != null) {
+            user = userService.getUserByEmail(principal);
+        }
         //КОСТЫЫЫЫЛЬ TODO fix it
 
         List<Project> projects;
@@ -117,14 +119,26 @@ public class ProjectService implements ProjectServiceInt {
         }
 
         List<SimpleProjectDto> projectDtos = new ArrayList<>();
-        //List<Project> justThere = getUserProjects(user.getId());
-        //List<Notification> justJoined = notificationService.get
+        List<Project> justThere = null;
+        List<Project> justJoined = null;
+        List<Project> justInvited = null;
+        if (user != null) {
+            justThere = getUserProjects(user.getId());
+            justJoined = notificationService.getProjectUserJoined(user);
+            justInvited = notificationService.getProjectUserInvited(user);
+        }
         SimpleProjectDto simpleProjectDto;
         for (Project project: result) {
             simpleProjectDto = SimpleProjectDto.from(project);
-            //if (project.getLeader().equals(user) || project.getParticipants().contains(user)) {
-            //    simpleProjectDto.setStatus(1);
-            //}
+            if (justThere != null && justThere.contains(project)) {
+                simpleProjectDto.setStatus(1);
+            }
+            else if (justInvited != null && justInvited.contains(project)) {
+                simpleProjectDto.setStatus(2);
+            }
+            else if (justJoined != null && justJoined.contains(project)) {
+                simpleProjectDto.setStatus(3);
+            }
             projectDtos.add(SimpleProjectDto.from(project));
         }
 

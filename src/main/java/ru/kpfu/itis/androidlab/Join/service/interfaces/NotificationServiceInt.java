@@ -18,4 +18,8 @@ public interface NotificationServiceInt {
     List<User> getInvitedUser(Long projectId);
 
     List<User> getJoinedUser(Long projectId);
+
+    List<Project> getProjectUserJoined(User user);
+
+    List<Project> getProjectUserInvited(User user);
 }
