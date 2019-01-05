@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -39,4 +40,19 @@ public class Project {
     private List<Notification> notifications;
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Project project = (Project) o;
+        return Objects.equals(id, project.id) &&
+                Objects.equals(title, project.title) &&
+                Objects.equals(description, project.description);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, title, description);
+    }
 }
