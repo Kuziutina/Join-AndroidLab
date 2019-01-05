@@ -149,10 +149,20 @@ public class UserService implements UserServiceInt {
     @Override
     public List<SimpleUserDto> findUserDtos(String username, String vacancyName, Integer level, Integer experience, Long projectId) {
         List<User> users = findUsers(username, vacancyName, level, experience);
+        List<User> justThere;
+        List<User> justInvited;
+        List<User> justJoined;
         users.remove(projectService.getLeader(projectId));
-        List<User> justThere = projectService.getAllParticipants(projectId);
-        List<User> justInvited = notificationService.getInvitedUser(projectId);
-        List<User> justJoined = notificationService.getJoinedUser(projectId);
+        if (projectId == null) {
+            justThere = new ArrayList<>();
+            justInvited = new ArrayList<>();
+            justJoined = new ArrayList<>();
+        }
+        else {
+            justThere = projectService.getAllParticipants(projectId);
+            justInvited = notificationService.getInvitedUser(projectId);
+            justJoined = notificationService.getJoinedUser(projectId);
+        }
         List<SimpleUserDto> userDtos = new ArrayList<>();
 
         SimpleUserDto simpleUserDto;
