@@ -30,7 +30,7 @@ public class ProjectController {
                                          @RequestParam(value = "knowledge_level", required = false) Integer level,
                                          @RequestParam(value = "experience", required = false) Integer experience,
                                          Authentication authentication) {
-        List<SimpleProjectDto> projectDtos = projectService.findProjectDtos(name, vacancyName, level, experience, (CustomUserDetails) authentication.getPrincipal());
+        List<SimpleProjectDto> projectDtos = projectService.findProjectDtos(name, vacancyName, level, experience);
         return ResponseEntity.ok(projectDtos);
     }
 

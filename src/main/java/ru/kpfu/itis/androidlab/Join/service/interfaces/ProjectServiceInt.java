@@ -17,7 +17,9 @@ public interface ProjectServiceInt {
     ProjectDto getProjectDto(Long id);
     Project getProject(Long id);
 
-    List<SimpleProjectDto> findProjectDtos(String name, String vacancyName, Integer knowledgeLevel, Integer experience, CustomUserDetails principal);
+    //List<SimpleProjectDto> findProjectDtos(String name, String vacancyName, Integer knowledgeLevel, Integer experience, CustomUserDetails principal);
+
+    List<SimpleProjectDto> findProjectDtos(String name, String vacancyName, Integer knowledgeLevel, Integer experience);
 
     Long createProject(ProjectForm projectForm);
     void changeProject(Long id, ProjectForm projectForm);

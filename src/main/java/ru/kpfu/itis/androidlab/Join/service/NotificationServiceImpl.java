@@ -112,6 +112,9 @@ public class NotificationServiceImpl implements NotificationServiceInt {
         return users;
     }
 
+    /*@Override
+    public List<Project> getProje*/
+
     private List<Notification> getUserNotification(User user) {
         List<Project> projects = projectService.getUserOwnerProjects(user);
         List<Notification> notifications = new ArrayList<>();

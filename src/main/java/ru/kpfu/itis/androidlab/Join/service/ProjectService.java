@@ -71,8 +71,8 @@ public class ProjectService implements ProjectServiceInt {
     }
 
     @Override
-    public List<SimpleProjectDto> findProjectDtos(String name, String vacancyName, Integer knowledgeLevel, Integer experience, CustomUserDetails principal) {
-        User user = userService.getUser(principal.getId());
+    public List<SimpleProjectDto> findProjectDtos(String name, String vacancyName, Integer knowledgeLevel, Integer experience) {
+        //User user = userService.getUser(principal.getId());
         //КОСТЫЫЫЫЛЬ TODO fix it
 
         List<Project> projects;
@@ -117,13 +117,14 @@ public class ProjectService implements ProjectServiceInt {
         }
 
         List<SimpleProjectDto> projectDtos = new ArrayList<>();
-//        List<Project> justThere = get
+        //List<Project> justThere = getUserProjects(user.getId());
+        //List<Notification> justJoined = notificationService.get
         SimpleProjectDto simpleProjectDto;
         for (Project project: result) {
             simpleProjectDto = SimpleProjectDto.from(project);
-            if (project.getLeader().equals(user) || project.getParticipants().contains(user)) {
-                simpleProjectDto.setStatus(1);
-            }
+            //if (project.getLeader().equals(user) || project.getParticipants().contains(user)) {
+            //    simpleProjectDto.setStatus(1);
+            //}
             projectDtos.add(SimpleProjectDto.from(project));
         }
 
