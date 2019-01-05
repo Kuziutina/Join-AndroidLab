@@ -20,7 +20,7 @@ public class ProjectDto {
     private String name;
     private String description;
     private SimpleUserDto leader;
-    private List<SimpleUserDto> participants;
+//    private List<SimpleUserDto> participants;
     private List<SpecializationDto> vacancies;
 
     private ProjectDto(Project project) {
@@ -29,12 +29,12 @@ public class ProjectDto {
         this.description = project.getDescription();
         this.leader = SimpleUserDto.from(project.getLeader());
 
-        if (project.getParticipants() != null) {
+        /*if (project.getParticipants() != null) {
             participants = new ArrayList<>();
             for (User user: project.getParticipants()) {
                 participants.add(SimpleUserDto.from(user));
             }
-        }
+        }*/
 
         if (project.getVacancies() != null) {
             vacancies = new ArrayList<>();

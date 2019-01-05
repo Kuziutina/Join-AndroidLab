@@ -92,7 +92,7 @@ public class NotificationServiceImpl implements NotificationServiceInt {
 
     @Override
     public List<User> getInvitedUser(Long projectId){
-        List<Notification> notifications = notificationRepository.findAllByTypeAndProject(0, projectId);
+        List<Notification> notifications = notificationRepository.findAllByTypeAndProject(0, projectService.getProject(projectId));
         //TODO more clever finding, may be in db do this get??
         List<User> users = new ArrayList<>();
         for (Notification notification: notifications) {
@@ -104,7 +104,7 @@ public class NotificationServiceImpl implements NotificationServiceInt {
 
     @Override
     public List<User> getJoinedUser(Long projectId) {
-        List<Notification> notifications = notificationRepository.findAllByTypeAndProject(2, projectId);
+        List<Notification> notifications = notificationRepository.findAllByTypeAndProject(2, projectService.getProject(projectId));
         List<User> users = new ArrayList<>();
         for (Notification notification: notifications) {
             users.add(notification.getUser());

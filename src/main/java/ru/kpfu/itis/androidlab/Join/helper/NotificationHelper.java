@@ -27,7 +27,7 @@ public class NotificationHelper {
 
         JSONObject notification_body = new JSONObject();
         notification_body.put("title", notification.getType());
-        notification_body.put("body", notification.getMessage());
+//        notification_body.put("body", notification.getMessage());
 
         body.put("notification", notification);
 

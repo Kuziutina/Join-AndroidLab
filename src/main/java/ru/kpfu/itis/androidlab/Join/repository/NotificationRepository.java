@@ -13,6 +13,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     List<Notification> findAllByTypeInAndUser(List<Integer> type, User user);
     List<Notification> findAllByTypeInAndProjectIn(List<Integer> type, List<Project> projects);
 
-    @Query("select n from notification n where n.type = ?1 and n.project_id = ?2")
-    List<Notification> findAllByTypeAndProject(Integer type, Long projectId);
+//    @Query("select n from Notification n where n.type = ?1 and n.project ")
+    List<Notification> findAllByTypeAndProject(Integer type, Project project);
 }
