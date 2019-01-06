@@ -95,8 +95,8 @@ public class UserController extends MainController{
     }
 
     @DeleteMapping(value = "/{id}/profileImage")
-    public ResponseEntity deleteProfileImage(@PathVariable Long userId) {
-        if (userService.deleteImage(userId)) {
+    public ResponseEntity deleteProfileImage(@PathVariable Long id) {
+        if (userService.deleteImage(id)) {
             return ResponseEntity.ok().build();
         }
 

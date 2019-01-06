@@ -43,12 +43,17 @@ public class ImageHelper {
 
     public boolean deleteImage(String url) {
         cloudinary = getInstance();
+        String[] tags = url.split("/");
+        Map result;
         try {
-            cloudinary.uploader().destroy(url, ObjectUtils.emptyMap());
+            result = cloudinary.api().deleteResourcesByTag(tags[tags.length - 1], ObjectUtils.emptyMap());
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return true;
+        return false;
     }
 
 }

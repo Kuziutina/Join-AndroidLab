@@ -200,6 +200,7 @@ public class UserService implements UserServiceInt {
         User user = getUser(userId);
         if (user.getProfileImageLink() != null && imageHelper.deleteImage(user.getProfileImageLink())) {
             user.setProfileImageLink(null);
+            userRepository.save(user);
             return true;
         }
 
