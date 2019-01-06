@@ -3,6 +3,8 @@ package ru.kpfu.itis.androidlab.Join.controller;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.kpfu.itis.androidlab.Join.details.CustomUserDetails;
 import ru.kpfu.itis.androidlab.Join.dto.ProjectDto;
@@ -10,18 +12,28 @@ import ru.kpfu.itis.androidlab.Join.dto.SimpleProjectDto;
 import ru.kpfu.itis.androidlab.Join.form.InviteUserForm;
 import ru.kpfu.itis.androidlab.Join.form.ProjectForm;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.ProjectServiceInt;
+import ru.kpfu.itis.androidlab.Join.validators.ProjectValidator;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/projects")
-public class ProjectController {
+public class ProjectController extends MainController {
 
     private ProjectServiceInt projectService;
+    private ProjectValidator projectValidator;
 
-    public ProjectController(ProjectServiceInt projectService) {
+    public ProjectController(ProjectServiceInt projectService,
+                             ProjectValidator projectValidator) {
         this.projectService = projectService;
+        this.projectValidator = projectValidator;
+    }
+
+    @InitBinder("projectForm")
+    public void initUserFormValidator(WebDataBinder binder) {
+        binder.addValidators(projectValidator);
     }
 
     @GetMapping
@@ -35,7 +47,12 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity createProject(@RequestBody ProjectForm projectForm) {
+    public ResponseEntity createProject(@RequestBody @Valid ProjectForm projectForm,
+                                        BindingResult errors) {
+        if (errors.hasErrors()) {
+            return createValidErrorResponse(errors);
+        }
+
         Long userId = projectService.createProject(projectForm);
 
         return ResponseEntity.ok(userId);
@@ -49,7 +66,12 @@ public class ProjectController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity changeProject(@PathVariable Long id, @RequestBody ProjectForm projectForm) {
+    public ResponseEntity changeProject(@PathVariable Long id,
+                                        @Valid @RequestBody ProjectForm projectForm,
+                                        BindingResult errors) {
+        if (errors.hasErrors()) {
+            return createValidErrorResponse(errors);
+        }
         projectService.changeProject(id, projectForm);
 
         return ResponseEntity.ok().build();

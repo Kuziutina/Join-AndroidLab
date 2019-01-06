@@ -41,18 +41,15 @@ public class ImageHelper {
         return url;
     }
 
-    public boolean deleteImage(String url) {
+    public void deleteImage(String url) {
         cloudinary = getInstance();
         String[] tags = url.split("/");
-        String[] publicId = tags[tags.length - 1].split(".");
-        Map result;
+        String[] publicId = tags[tags.length - 1].split("\\.");
         try {
-            result = cloudinary.api().deleteResources(ObjectUtils.asArray(publicId[0]), ObjectUtils.emptyMap());
-            return true;
+            cloudinary.api().deleteResources(ObjectUtils.asArray(publicId[0]), ObjectUtils.emptyMap());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
     }
 
 }

@@ -198,7 +198,8 @@ public class UserService implements UserServiceInt {
     @Override
     public boolean deleteImage(Long userId) {
         User user = getUser(userId);
-        if (user.getProfileImageLink() != null && imageHelper.deleteImage(user.getProfileImageLink())) {
+        if (user.getProfileImageLink() != null) {
+            imageHelper.deleteImage(user.getProfileImageLink());
             user.setProfileImageLink(null);
             userRepository.save(user);
             return true;

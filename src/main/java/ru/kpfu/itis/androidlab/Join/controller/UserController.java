@@ -7,6 +7,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.kpfu.itis.androidlab.Join.dto.*;
@@ -16,7 +18,9 @@ import ru.kpfu.itis.androidlab.Join.repository.UserRepository;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.ProjectServiceInt;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.SpecializationServiceInt;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.UserServiceInt;
+import ru.kpfu.itis.androidlab.Join.validators.UserProfileValidator;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -27,13 +31,21 @@ public class UserController extends MainController{
     private UserServiceInt userService;
     private SpecializationServiceInt specializationService;
     private ProjectServiceInt projectService;
+    private UserProfileValidator userProfileValidator;
 
     public UserController(UserServiceInt userService,
                           SpecializationServiceInt specializationService,
-                          ProjectServiceInt projectService) {
+                          ProjectServiceInt projectService,
+                          UserProfileValidator userProfileValidator) {
         this.userService = userService;
         this.specializationService = specializationService;
         this.projectService = projectService;
+        this.userProfileValidator = userProfileValidator;
+    }
+
+    @InitBinder("profileForm")
+    public void initUserFormValidator(WebDataBinder binder) {
+        binder.addValidators(userProfileValidator);
     }
 
     @GetMapping(value = "/{id}")
@@ -53,13 +65,24 @@ public class UserController extends MainController{
     }
 
     @PostMapping(value = "/{id}/change")
-    public ResponseEntity<ResponseForm> changeProfile(@PathVariable Long id, @RequestBody ProfileForm profileForm) {
+    public ResponseEntity changeProfile(@PathVariable Long id,
+                                                      @Valid @RequestBody ProfileForm profileForm,
+                                                      BindingResult errors) {
+        if (errors.hasErrors()) {
+            return createValidErrorResponse(errors);
+        }
         ResultForm resultForm = userService.change(id, profileForm);
         return createResponseEntity(resultForm);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ResponseForm> updateProfileWithSpec(@PathVariable Long id, @RequestBody ProfileForm profileForm) {
+    public ResponseEntity updateProfileWithSpec(@PathVariable Long id,
+                                                              @Valid @RequestBody ProfileForm profileForm,
+                                                              BindingResult errors) {
+        if (errors.hasErrors()) {
+            return createValidErrorResponse(errors);
+        }
+
         ResultForm resultForm = userService.updateWithSpec(id, profileForm);
         return createResponseEntity(resultForm);
     }
@@ -101,7 +124,7 @@ public class UserController extends MainController{
         }
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("error", "inafe doesn't exist");
+        headers.add("error", "image doesn't exist");
         return ResponseEntity.status(400).headers(headers).build();
     }
 

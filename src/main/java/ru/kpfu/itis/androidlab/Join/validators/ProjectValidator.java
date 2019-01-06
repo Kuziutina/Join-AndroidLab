@@ -11,7 +11,6 @@ import ru.kpfu.itis.androidlab.Join.service.interfaces.UserServiceInt;
 @Component
 public class ProjectValidator implements Validator {
 
-//    private ProjectServiceInt userService;
     private UserServiceInt userService;
 
     public ProjectValidator(UserServiceInt userService) {
@@ -31,20 +30,26 @@ public class ProjectValidator implements Validator {
             errors.reject("invalid project name");
         }
 
-        if (projectForm.getUserId() == null || userService.getUser(projectForm.getUserId()) == null) {
-            errors.reject("user not found");
-        }
 
         if (projectForm.getVacancies() != null) {
-            for (SpecializationForm specializationForm: projectForm.getVacancies()) {
+            SpecializationForm specializationForm;
+            for (int i = 0; i < projectForm.getVacancies().size(); i++) {
+                specializationForm = projectForm.getVacancies().get(i);
                 if (specializationForm.getName() == null || specializationForm.getName().isEmpty()) {
                     errors.reject("invalid specialization name (empty)");
                     return;
                 }
                 //TODO O^2, need optimization
-
+                for (int j = i+1; j < projectForm.getVacancies().size(); j++) {
+                    if (specializationForm.getName().equals(projectForm.getVacancies().get(j).getName())) {
+                        errors.reject("invalid specialization name (repeat)");
+                    }
+                }
             }
         }
 
+        if (projectForm.getUserId() == null || userService.getUser(projectForm.getUserId()) == null) {
+            errors.reject("user not found");
+        }
     }
 }
