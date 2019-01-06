@@ -22,4 +22,6 @@ public interface NotificationServiceInt {
     List<Project> getProjectUserJoined(User user);
 
     List<Project> getProjectUserInvited(User user);
+
+    Notification checkExisting(User user, Project project);
 }

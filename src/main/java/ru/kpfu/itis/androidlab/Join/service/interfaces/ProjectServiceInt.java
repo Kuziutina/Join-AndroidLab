@@ -21,7 +21,7 @@ public interface ProjectServiceInt {
     List<SimpleProjectDto> findProjectDtos(String name, String vacancyName, Integer knowledgeLevel, Integer experience, String principal);
 
     Long createProject(ProjectForm projectForm);
-    void changeProject(Long id, ProjectForm projectForm);
+    boolean changeProject(Long id, ProjectForm projectForm);
 
     void addUserToProject(User user, Project project);
 
@@ -32,4 +32,6 @@ public interface ProjectServiceInt {
     List<User> getAllParticipants(Long projectId);
 
     User getLeader(Long projectId);
+
+    boolean deleteProject(Long id);
 }

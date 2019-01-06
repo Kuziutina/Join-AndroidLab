@@ -7,6 +7,8 @@ import ru.kpfu.itis.androidlab.Join.model.Specialization;
 import ru.kpfu.itis.androidlab.Join.model.SpecializationName;
 import ru.kpfu.itis.androidlab.Join.model.User;
 
+import java.util.List;
+
 public interface SpecializationServiceInt {
     ResultForm addSpecialization(User user, SpecializationForm specializationForm);
     ResultForm update(Long id, SpecializationForm specializationForm);
@@ -17,4 +19,6 @@ public interface SpecializationServiceInt {
     void deleteSpecialization(User user);
 
     SpecializationName findSpecializationName(String specializationName);
+
+    List<String> getAllSpecializationName();
 }

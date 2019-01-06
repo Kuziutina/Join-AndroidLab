@@ -17,4 +17,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     List<Notification> findAllByTypeAndProject(Integer type, Project project);
 
     List<Notification> findAllByTypeAndUser(Integer type, User user);
+
+    Notification findByUserAndProjectAndTypeIn(User user, Project project, List<Integer> types);
 }

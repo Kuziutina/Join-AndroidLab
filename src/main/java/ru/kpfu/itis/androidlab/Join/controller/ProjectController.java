@@ -11,6 +11,7 @@ import ru.kpfu.itis.androidlab.Join.dto.ProjectDto;
 import ru.kpfu.itis.androidlab.Join.dto.SimpleProjectDto;
 import ru.kpfu.itis.androidlab.Join.form.InviteUserForm;
 import ru.kpfu.itis.androidlab.Join.form.ProjectForm;
+import ru.kpfu.itis.androidlab.Join.form.ResultForm;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.ProjectServiceInt;
 import ru.kpfu.itis.androidlab.Join.validators.ProjectValidator;
 
@@ -61,6 +62,9 @@ public class ProjectController extends MainController {
     @GetMapping(value = "/{id}")
     public ResponseEntity getProject(@PathVariable Long id) {
         ProjectDto projectDto = projectService.getProjectDto(id);
+        if (projectDto == null){
+            return createResponseEntity(ResultForm.builder().code(400).error("project not exists").build());
+        }
 
         return ResponseEntity.ok(projectDto);
     }
@@ -72,8 +76,19 @@ public class ProjectController extends MainController {
         if (errors.hasErrors()) {
             return createValidErrorResponse(errors);
         }
-        projectService.changeProject(id, projectForm);
 
+        if (!projectService.changeProject(id, projectForm)) {
+            return createResponseEntity(ResultForm.builder().code(400).error("project not exists").build());
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity deleteProject(@PathVariable Long id) {
+        if (!projectService.deleteProject(id)){
+            return createResponseEntity(ResultForm.builder().code(400).error("project not exists").build());
+        }
         return ResponseEntity.ok().build();
     }
 

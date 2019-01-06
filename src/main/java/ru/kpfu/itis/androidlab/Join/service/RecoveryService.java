@@ -30,7 +30,13 @@ public class RecoveryService implements RecoveryServiceInt {
     public void sendRecoveryLetter(String email) {
         String code = Generator.generate(6);
         User user = userService.getUserByEmail(email);
-        Recovery recovery = Recovery.builder().recoveryLink(code).user(user).build();
+        Recovery recovery = getRecovery(email);
+        if (recovery == null) {
+            recovery = Recovery.builder().recoveryLink(code).user(user).build();
+        }
+
+        recovery.setRecoveryLink(code);
+
         recoveryRepository.save(recovery);
         emailSender.sendEmailMessage(email, "Восстановление пароля", "Код для восстановления пароля " + code);
     }
@@ -48,5 +54,11 @@ public class RecoveryService implements RecoveryServiceInt {
     public Recovery getRecovery(ChangePasswordForm changePasswordForm) {
         User user = userService.getUserByEmail(changePasswordForm.getEmail());
         return recoveryRepository.getByRecoveryLinkAndUser(changePasswordForm.getCode(), user);
+    }
+
+
+    private Recovery getRecovery(String email) {
+        User user = userService.getUserByEmail(email);
+        return recoveryRepository.getByUser(user);
     }
 }

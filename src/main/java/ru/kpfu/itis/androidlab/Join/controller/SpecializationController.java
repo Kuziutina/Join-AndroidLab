@@ -7,6 +7,8 @@ import ru.kpfu.itis.androidlab.Join.form.ResultForm;
 import ru.kpfu.itis.androidlab.Join.form.SpecializationForm;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.SpecializationServiceInt;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/specialization")
 public class SpecializationController extends MainController{
@@ -18,15 +20,22 @@ public class SpecializationController extends MainController{
     }
 
     @PostMapping(value = "/{id}/update")
-    public ResponseEntity<ResponseForm> updateSpecialization(@PathVariable Long id, @RequestBody SpecializationForm specializationForm) {
+    public ResponseEntity updateSpecialization(@PathVariable Long id, @RequestBody SpecializationForm specializationForm) {
         ResultForm resultForm = specializationService.update(id ,specializationForm);
         return createResponseEntity(resultForm);
     }
 
     @PostMapping(value = "/{id}/delete")
-    public ResponseEntity<ResponseForm> deleteSpecialization(@PathVariable Long id) {
+    public ResponseEntity deleteSpecialization(@PathVariable Long id) {
         specializationService.delete(id);
 
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value = "/name")
+    public ResponseEntity getAllSpecializationName() {
+        List<String> names = specializationService.getAllSpecializationName();
+
+        return ResponseEntity.ok(names);
     }
 }

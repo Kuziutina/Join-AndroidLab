@@ -66,7 +66,9 @@ public class ProjectService implements ProjectServiceInt {
 
     @Override
     public ProjectDto getProjectDto(Long id) {
-        return ProjectDto.from(getProject(id));
+        Project project = getProject(id);
+        if (project == null) return null;
+        return ProjectDto.from(project);
     }
 
     @Override
@@ -152,8 +154,9 @@ public class ProjectService implements ProjectServiceInt {
     }
 
     @Override
-    public void changeProject(Long id, ProjectForm projectForm) {
-        Project project = projectRepository.findById(id).get();
+    public boolean changeProject(Long id, ProjectForm projectForm) {
+        Project project = projectRepository.getOne(id);
+        if (project == null) return false;
         //TODO Этот костыль был поставлен, чтобы убрать 2н^2 сложность.
         specializationService.deleteSpecialization(project);
         project.setTitle(projectForm.getName());
@@ -171,6 +174,7 @@ public class ProjectService implements ProjectServiceInt {
         project.setVacancies(specializations);
         projectRepository.save(project);
 
+        return true;
     }
 
     @Override
@@ -209,6 +213,13 @@ public class ProjectService implements ProjectServiceInt {
         Project project = getProject(projectId);
 
         return project.getLeader();
+    }
+
+    @Override
+    public boolean deleteProject(Long id) {
+        if (getProject(id) == null) return false;
+        projectRepository.deleteById(id);
+        return true;
     }
 
 

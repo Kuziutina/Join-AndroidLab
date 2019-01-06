@@ -11,6 +11,9 @@ import ru.kpfu.itis.androidlab.Join.repository.SpecializationNameRepository;
 import ru.kpfu.itis.androidlab.Join.repository.SpecializationRepository;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.SpecializationServiceInt;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Transactional
 public class SpecializationService implements SpecializationServiceInt {
@@ -104,6 +107,19 @@ public class SpecializationService implements SpecializationServiceInt {
     @Override
     public SpecializationName findSpecializationName(String specializationName) {
         return specializationNameRepository.findByName(specializationName);
+    }
+
+    @Override
+    public List<String> getAllSpecializationName() {
+        List<SpecializationName> specializationNames = specializationNameRepository.findAll();
+        List<String> names = new ArrayList<>();
+        if (specializationNames != null) {
+            for (SpecializationName specializationName: specializationNames) {
+                names.add(specializationName.getName());
+            }
+        }
+
+        return names;
     }
 
     private SpecializationName setTrueSpecializationName(String name) {

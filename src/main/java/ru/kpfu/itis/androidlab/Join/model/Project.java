@@ -25,10 +25,15 @@ public class Project {
     @JoinColumn(name = "leader", referencedColumnName = "id")
     private User leader;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Specialization> vacancies;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {
+            CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.REFRESH,
+            CascadeType.PERSIST
+    })
     @JoinTable(
             name = "user_project",
             joinColumns = {@JoinColumn(name = "project_id")},
@@ -36,7 +41,7 @@ public class Project {
     )
     private List<User> participants;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notification> notifications;
 
 

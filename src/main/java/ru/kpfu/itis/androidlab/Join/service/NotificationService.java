@@ -13,7 +13,7 @@ import ru.kpfu.itis.androidlab.Join.service.interfaces.ProjectServiceInt;
 import java.util.*;
 
 @Service
-public class NotificationServiceImpl implements NotificationServiceInt {
+public class NotificationService implements NotificationServiceInt {
 
 //    private static final String INVITE = "Пользователь %s приглашает вас присоедениться к проекту %s";                  //0
 //    private static final String JOIN = "Пользователь %s хочет присоединиться к проекту %s";                             //2
@@ -29,8 +29,8 @@ public class NotificationServiceImpl implements NotificationServiceInt {
     private NotificationRepository notificationRepository;
     private ProjectServiceInt projectService;
 
-    public NotificationServiceImpl(NotificationRepository notificationRepository,
-                                   ProjectServiceInt projectService) {
+    public NotificationService(NotificationRepository notificationRepository,
+                               ProjectServiceInt projectService) {
         this.notificationRepository = notificationRepository;
         this.projectService = projectService;
     }
@@ -59,17 +59,28 @@ public class NotificationServiceImpl implements NotificationServiceInt {
 
 
         if (notification.getType() == 0) {
-            newNotification.setType(1);
-            notification.setType(4);
+
+
             if (answerNotificationForm.isAnswer()) {
+                newNotification.setType(1);
+                notification.setType(6);
                 projectService.addUserToProject(user, project);
+            }
+            else {
+                newNotification.setType(4);
+                notification.setType(7);
             }
         }
         else if (notification.getType() == 2) {
-            newNotification.setType(3);
-            notification.setType(5);
+
             if (answerNotificationForm.isAnswer()) {
+                newNotification.setType(3);
+                notification.setType(8);
                 projectService.addUserToProject(user, project);
+            }
+            else {
+                newNotification.setType(5);
+                notification.setType(9);
             }
         }
 
@@ -132,6 +143,11 @@ public class NotificationServiceImpl implements NotificationServiceInt {
         }
 
         return projects;
+    }
+
+    @Override
+    public Notification checkExisting(User user, Project project) {
+        return notificationRepository.findByUserAndProjectAndTypeIn(user, project, Arrays.asList(0, 2));
     }
 
     private List<Notification> getUserNotification(User user) {

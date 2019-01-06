@@ -59,6 +59,6 @@ public class RecoveryController extends MainController{
         }
 
         recoveryService.changePassword(changePasswordForm);
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().build();
     }
 }
