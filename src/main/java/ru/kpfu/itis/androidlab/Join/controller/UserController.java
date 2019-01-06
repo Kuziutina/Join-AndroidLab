@@ -18,6 +18,7 @@ import ru.kpfu.itis.androidlab.Join.repository.UserRepository;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.ProjectServiceInt;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.SpecializationServiceInt;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.UserServiceInt;
+import ru.kpfu.itis.androidlab.Join.validators.InviteValidator;
 import ru.kpfu.itis.androidlab.Join.validators.UserProfileValidator;
 
 import javax.validation.Valid;
@@ -32,20 +33,29 @@ public class UserController extends MainController{
     private SpecializationServiceInt specializationService;
     private ProjectServiceInt projectService;
     private UserProfileValidator userProfileValidator;
+    private InviteValidator inviteValidator;
 
     public UserController(UserServiceInt userService,
                           SpecializationServiceInt specializationService,
                           ProjectServiceInt projectService,
-                          UserProfileValidator userProfileValidator) {
+                          UserProfileValidator userProfileValidator,
+                          InviteValidator inviteValidator) {
         this.userService = userService;
         this.specializationService = specializationService;
         this.projectService = projectService;
         this.userProfileValidator = userProfileValidator;
+        this.inviteValidator = inviteValidator;
     }
 
     @InitBinder("profileForm")
     public void initUserFormValidator(WebDataBinder binder) {
         binder.addValidators(userProfileValidator);
+    }
+
+
+    @InitBinder("inviteUserForm")
+    public void initInviteUserFormValidator(WebDataBinder binder) {
+        binder.addValidators(inviteValidator);
     }
 
     @GetMapping(value = "/{id}")
@@ -155,11 +165,29 @@ public class UserController extends MainController{
     }
 
     @PostMapping(value = "/invite")
-    public ResponseEntity inviteUser(@RequestBody InviteUserForm inviteUserForm) {
+    public ResponseEntity inviteUser(@Valid @RequestBody InviteUserForm inviteUserForm,
+                                     BindingResult errors) {
+
+        if (errors.hasErrors()) {
+            return createValidErrorResponse(errors);
+        }
 
         projectService.inviteUser(inviteUserForm);
 
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/{id}/exit")
+    public ResponseEntity exitFromProject(@Valid @RequestBody InviteUserForm inviteUserForm,
+                                          BindingResult errors) {
+        if (errors.hasErrors()) {
+            return createValidErrorResponse(errors);
+        }
+
+        projectService.exitFromProject(inviteUserForm);
+
+        return ResponseEntity.ok().build();
+
     }
 
 

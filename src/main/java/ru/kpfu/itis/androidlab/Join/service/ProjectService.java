@@ -222,6 +222,41 @@ public class ProjectService implements ProjectServiceInt {
         return true;
     }
 
+    @Override
+    public void excludeUser(InviteUserForm inviteUserForm) {
+        User user = userService.getUser(inviteUserForm.getUserId());
+        Project project = getProject(inviteUserForm.getProjectId());
+
+        removeUser(project, user);
+
+        notificationService.addNotification(user, project, 10);
+    }
+
+    @Override
+    public void exitFromProject(InviteUserForm inviteUserForm) {
+        User user = userService.getUser(inviteUserForm.getUserId());
+        Project project = getProject(inviteUserForm.getProjectId());
+
+        removeUser(project, user);
+
+        notificationService.addNotification(user, project, 11);
+    }
+
+
+    private void removeUser(Project project, User user) {
+        List<User> users = project.getParticipants();
+        if (user != null) {
+            for (int i = 0; i < users.size(); i++) {
+                if (user.getId().equals(users.get(i).getId())) {
+                    users.remove(i);
+                    return;
+                }
+            }
+        }
+
+        projectRepository.save(project);
+    }
+
 
     private Project getProject(ProjectForm projectForm) {
         User user = userService.getUser(projectForm.getUserId());

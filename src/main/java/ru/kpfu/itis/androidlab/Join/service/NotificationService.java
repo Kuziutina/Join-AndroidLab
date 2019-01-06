@@ -150,12 +150,21 @@ public class NotificationService implements NotificationServiceInt {
         return notificationRepository.findByUserAndProjectAndTypeIn(user, project, Arrays.asList(0, 2));
     }
 
+    @Override
+    public boolean deleteNotification(Long id) {
+        Notification notification = notificationRepository.getOne(id);
+        if (notification != null) {
+            if (notification.getType() != 0 && notification.getType() != 2) return true;
+        }
+        return false;
+    }
+
     private List<Notification> getUserNotification(User user) {
         List<Project> projects = projectService.getUserOwnerProjects(user);
         List<Notification> notifications = new ArrayList<>();
-        List<Notification> buf = notificationRepository.findAllByTypeInAndUser(Arrays.asList(0,2,4), user);
+        List<Notification> buf = notificationRepository.findAllByTypeInAndUser(Arrays.asList(0,3,5,6,7,10), user);
         if (buf != null) notifications.addAll(buf);
-        buf = notificationRepository.findAllByTypeInAndProjectIn(Arrays.asList(1,3,5),projects);
+        buf = notificationRepository.findAllByTypeInAndProjectIn(Arrays.asList(1, 2, 4, 8, 9, 11),projects);
         if (buf != null) notifications.addAll(buf);
 
         return notifications;

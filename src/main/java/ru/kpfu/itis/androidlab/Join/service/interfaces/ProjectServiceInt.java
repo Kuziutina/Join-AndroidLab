@@ -34,4 +34,8 @@ public interface ProjectServiceInt {
     User getLeader(Long projectId);
 
     boolean deleteProject(Long id);
+
+    void excludeUser(InviteUserForm inviteUserForm);
+
+    void exitFromProject(InviteUserForm inviteUserForm);
 }

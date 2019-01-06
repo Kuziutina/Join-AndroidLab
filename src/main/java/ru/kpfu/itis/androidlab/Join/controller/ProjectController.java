@@ -13,6 +13,7 @@ import ru.kpfu.itis.androidlab.Join.form.InviteUserForm;
 import ru.kpfu.itis.androidlab.Join.form.ProjectForm;
 import ru.kpfu.itis.androidlab.Join.form.ResultForm;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.ProjectServiceInt;
+import ru.kpfu.itis.androidlab.Join.validators.InviteValidator;
 import ru.kpfu.itis.androidlab.Join.validators.ProjectValidator;
 
 import javax.validation.Valid;
@@ -25,16 +26,25 @@ public class ProjectController extends MainController {
 
     private ProjectServiceInt projectService;
     private ProjectValidator projectValidator;
+    private InviteValidator inviteValidator;
 
     public ProjectController(ProjectServiceInt projectService,
-                             ProjectValidator projectValidator) {
+                             ProjectValidator projectValidator,
+                             InviteValidator inviteValidator) {
         this.projectService = projectService;
         this.projectValidator = projectValidator;
+        this.inviteValidator = inviteValidator;
     }
 
     @InitBinder("projectForm")
     public void initUserFormValidator(WebDataBinder binder) {
         binder.addValidators(projectValidator);
+    }
+
+
+    @InitBinder("inviteUserForm")
+    public void initInviteUserFormValidator(WebDataBinder binder) {
+        binder.addValidators(inviteValidator);
     }
 
     @GetMapping
@@ -92,8 +102,25 @@ public class ProjectController extends MainController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping(value = "/{id}/exclude")
+    public ResponseEntity excludeUserFromProject(@Valid @RequestBody InviteUserForm inviteUserForm,
+                                                 BindingResult errors) {
+        if (errors.hasErrors()) {
+            return createValidErrorResponse(errors);
+        }
+
+        projectService.excludeUser(inviteUserForm);
+
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping(value = "/join")
-    public ResponseEntity joinProject(@RequestBody InviteUserForm inviteUserForm) {
+    public ResponseEntity joinProject(@Valid @RequestBody InviteUserForm inviteUserForm,
+                                      BindingResult errors) {
+        if (errors.hasErrors()) {
+            return createValidErrorResponse(errors);
+        }
+
         projectService.joinRequest(inviteUserForm);
 
         return ResponseEntity.ok().build();

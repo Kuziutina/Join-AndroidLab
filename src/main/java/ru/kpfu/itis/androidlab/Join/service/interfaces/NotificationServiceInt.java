@@ -24,4 +24,6 @@ public interface NotificationServiceInt {
     List<Project> getProjectUserInvited(User user);
 
     Notification checkExisting(User user, Project project);
+
+    boolean deleteNotification(Long id);
 }
