@@ -44,12 +44,11 @@ public class ImageHelper {
     public boolean deleteImage(String url) {
         cloudinary = getInstance();
         String[] tags = url.split("/");
+        String[] publicId = tags[tags.length - 1].split(".");
         Map result;
         try {
-            result = cloudinary.api().deleteResourcesByTag(tags[tags.length - 1], ObjectUtils.emptyMap());
+            result = cloudinary.api().deleteResources(ObjectUtils.asArray(publicId[0]), ObjectUtils.emptyMap());
             return true;
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }

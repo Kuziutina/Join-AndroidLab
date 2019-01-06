@@ -7,7 +7,7 @@ import ru.kpfu.itis.androidlab.Join.form.AnswerNotificationForm;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.NotificationServiceInt;
 
 @RestController
-@RequestMapping(value = "/notification")
+@RequestMapping(value = "/notifications")
 public class NotificationController {
 
     private NotificationServiceInt notificationService;
