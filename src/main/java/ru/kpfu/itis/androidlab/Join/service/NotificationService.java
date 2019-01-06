@@ -154,7 +154,10 @@ public class NotificationService implements NotificationServiceInt {
     public boolean deleteNotification(Long id) {
         Notification notification = notificationRepository.getOne(id);
         if (notification != null) {
-            if (notification.getType() != 0 && notification.getType() != 2) return true;
+            if (notification.getType() != 0 && notification.getType() != 2) {
+                notificationRepository.delete(notification);
+                return true;
+            }
         }
         return false;
     }
