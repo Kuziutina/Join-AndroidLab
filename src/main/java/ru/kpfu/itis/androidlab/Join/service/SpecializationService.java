@@ -106,7 +106,7 @@ public class SpecializationService implements SpecializationServiceInt {
 
     @Override
     public SpecializationName findSpecializationName(String specializationName) {
-        return specializationNameRepository.findByName(specializationName);
+        return specializationNameRepository.findByNameIgnoreCase(specializationName);
     }
 
     @Override
@@ -123,7 +123,7 @@ public class SpecializationService implements SpecializationServiceInt {
     }
 
     private SpecializationName setTrueSpecializationName(String name) {
-        SpecializationName specializationName = specializationNameRepository.findByName(name);
+        SpecializationName specializationName = specializationNameRepository.findByNameIgnoreCase(name);
         if (specializationName == null) {
             specializationName = SpecializationName.builder().name(name).build();
             specializationNameRepository.save(specializationName);

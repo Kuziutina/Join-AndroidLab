@@ -82,42 +82,58 @@ public class ProjectService implements ProjectServiceInt {
         List<Project> projects;
         List<Project> result = new ArrayList<>();
         if (name != null) {
-            projects = projectRepository.searchProjectByTitle("%" + name + "%");
+            result = projectRepository.searchProjectByTitle("%" + name + "%");
         }
         else {
-            projects = projectRepository.findAll();
+            result = projectRepository.findAll();
         }
+
         if (vacancyName != null) {
             SpecializationName specializationName = specializationService.findSpecializationName(vacancyName);
+            projects = result;
+            result = new ArrayList<>();
             for (Project project: projects) {
-                for (Specialization specialization: project.getVacancies()) {
-                    if (specialization.getSpecializationName().equals(specializationName)) {
-                        if (knowledgeLevel != null) {
-                            if (knowledgeLevel == specialization.getKnowledgeLevel()) {
-                                if (experience != null) {
-                                    if (experience == specialization.getExperience()) {
-                                        result.add(project);
-                                    }
-                                    else break;
-                                }
-                                else result.add(project);
-                            }
-                            else break;
-                        }
-                        else if (experience != null) {
-                            if (experience == specialization.getExperience()) {
-                                result.add(project);
-                            }
-                        }else {
+                if (project.getVacancies() != null) {
+                    for (Specialization specialization : project.getVacancies()) {
+                        if (specialization.getSpecializationName().equals(specializationName)) {
                             result.add(project);
+                            break;
                         }
-                        break;
                     }
                 }
 
             }
-        }else {
-            result = projects;
+        }
+
+        if (knowledgeLevel != null) {
+            projects = result;
+            result = new ArrayList<>();
+            for (Project project: projects) {
+                if (project.getVacancies() != null) {
+                    for (Specialization specialization: project.getVacancies()) {
+                        if (specialization.getKnowledgeLevel().equals(knowledgeLevel)) {
+                            result.add(project);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+
+        if (experience != null) {
+            projects = result;
+            result = new ArrayList<>();
+            for (Project project: projects) {
+                if (project.getVacancies() != null) {
+                    for (Specialization specialization: project.getVacancies()) {
+                        if (specialization.getExperience().equals(experience)) {
+                            result.add(project);
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         List<SimpleProjectDto> projectDtos = new ArrayList<>();
