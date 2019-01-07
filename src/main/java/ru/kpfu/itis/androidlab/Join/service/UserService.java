@@ -234,6 +234,7 @@ public class UserService implements UserServiceInt {
                 }
             }
         }
+        
         if (level != null) {
             users = resultUser;
             resultUser = new ArrayList<>();
