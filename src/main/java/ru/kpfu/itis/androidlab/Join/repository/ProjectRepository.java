@@ -13,7 +13,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     List<Project> findAllByLeader(User user);
 
     @Query(
-            value = "SELECT * FROM project WHERE title LIKE %:searchTitle%",
+            value = "SELECT * FROM project WHERE UPPER(title) LIKE UPPER (:searchTitle)",
             nativeQuery = true
     )
     public List<Project> searchProjectByTitle(@Param("searchTitle") String searchTitle);

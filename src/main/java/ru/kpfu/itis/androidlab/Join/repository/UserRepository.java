@@ -12,7 +12,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findUserByUsername(String username);
 
     @Query(
-            value = "SELECT * FROM _user WHERE username LIKE %:searchUsername%",
+            value = "SELECT * FROM _user WHERE UPPER(username) LIKE UPPER(:searchUsername)",
             nativeQuery = true
     )
     List<User> searchUsersByUsername(@Param("searchUsername") String searchUsername);

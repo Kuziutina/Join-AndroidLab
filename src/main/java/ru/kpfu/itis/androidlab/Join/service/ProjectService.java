@@ -177,17 +177,13 @@ public class ProjectService implements ProjectServiceInt {
         specializationService.deleteSpecialization(project);
         project.setTitle(projectForm.getName());
         project.setDescription(projectForm.getDescription());
-        List<User> users = new ArrayList<>();
-        for (ProfileForm profileForm: projectForm.getParticipants()) {
-            users.add(userService.getUser(profileForm.getId()));
-        }
-        project.setParticipants(users);
-        List<Specialization> specializations = new ArrayList<>();
+        //List<Specialization> specializations = new ArrayList<>();
         for (SpecializationForm specializationForm: projectForm.getVacancies()) {
             Specialization specialization = specializationService.addSpecialization(project, specializationForm);
-            specializations.add(specialization);
+            //specializations.add(specialization);
+            project.getVacancies().add(specialization);
         }
-        project.setVacancies(specializations);
+//        project.setVacancies(specializations);
         projectRepository.save(project);
 
         return true;
