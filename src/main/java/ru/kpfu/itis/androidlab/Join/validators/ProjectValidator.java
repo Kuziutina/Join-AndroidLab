@@ -48,8 +48,5 @@ public class ProjectValidator implements Validator {
             }
         }
 
-        if (projectForm.getUserId() == null || userService.getUser(projectForm.getUserId()) == null) {
-            errors.reject("user not found");
-        }
     }
 }
