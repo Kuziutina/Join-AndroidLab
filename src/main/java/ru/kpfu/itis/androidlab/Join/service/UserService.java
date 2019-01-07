@@ -212,43 +212,57 @@ public class UserService implements UserServiceInt {
         List<User> users;
         List<User> resultUser = new ArrayList<>();
         if (username != null) {
-            users = userRepository.searchUsersByUsername("%"+username+"%");
+            resultUser = userRepository.searchUsersByUsername("%"+username+"%");
         }
         else {
-            users = userRepository.findAll();
+            resultUser = userRepository.findAll();
         }
 
+
         if(vacancyName != null) {
+            users = resultUser;
+            resultUser = new ArrayList<>();
             SpecializationName specializationName = specializationService.findSpecializationName(vacancyName);
             for (User user: users) {
-                for (Specialization specialization: user.getSpecializations()) {
-                    if (specialization.getSpecializationName().equals(specializationName)) {
-                        if (level != null) {
-                            if (level == specialization.getKnowledgeLevel()) {
-                                if (experience != null) {
-                                    if (experience == specialization.getExperience()) {
-                                        resultUser.add(user);
-                                    }
-                                    else break;
-                                }
-                                else resultUser.add(user);
-                            }
-                            else break;
-                        }
-                        else if (experience != null) {
-                            if (experience == specialization.getExperience()) {
-                                resultUser.add(user);
-                            }
-                        }
-                        else {
+                if (user.getSpecializations() != null) {
+                    for (Specialization specialization : user.getSpecializations()) {
+                        if (specialization.getSpecializationName().equals(specializationName)) {
                             resultUser.add(user);
+                            break;
                         }
-                        break;
                     }
                 }
             }
         }
-        else resultUser = users;
+        if (level != null) {
+            users = resultUser;
+            resultUser = new ArrayList<>();
+            for (User user: users) {
+                if (user.getSpecializations() != null) {
+                    for (Specialization specialization : user.getSpecializations()) {
+                        if (specialization.getKnowledgeLevel() == level) {
+                            resultUser.add(user);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (experience != null) {
+            users = resultUser;
+            resultUser = new ArrayList<>();
+            for (User user: users) {
+                if (user.getSpecializations() != null) {
+                    for (Specialization specialization: user.getSpecializations()) {
+                        if (specialization.getExperience() == experience) {
+                            resultUser.add(user);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
 
         return resultUser;
     }
