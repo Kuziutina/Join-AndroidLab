@@ -22,12 +22,14 @@ public class ProjectDto {
     private SimpleUserDto leader;
     private List<SimpleUserDto> participants;
     private List<SpecializationDto> vacancies;
+    private Integer status;
 
     private ProjectDto(Project project) {
         this.id = project.getId();
         this.name = project.getTitle();
         this.description = project.getDescription();
         this.leader = SimpleUserDto.from(project.getLeader());
+        this.status = 0;
 
         if (project.getParticipants() != null) {
             participants = new ArrayList<>();

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.kpfu.itis.androidlab.Join.dto.ProjectDto;
 import ru.kpfu.itis.androidlab.Join.dto.SimpleProjectDto;
 import ru.kpfu.itis.androidlab.Join.form.InviteUserForm;
-import ru.kpfu.itis.androidlab.Join.form.ProfileForm;
 import ru.kpfu.itis.androidlab.Join.form.ProjectForm;
 import ru.kpfu.itis.androidlab.Join.form.SpecializationForm;
 import ru.kpfu.itis.androidlab.Join.model.*;
@@ -65,11 +64,58 @@ public class ProjectService implements ProjectServiceInt {
     }
 
     @Override
-    public ProjectDto getProjectDto(Long id) {
+    public ProjectDto getProjectDto(Long id, String principal) {
+        User user = userService.getUserByEmail(principal);
         Project project = getProject(id);
         if (project == null) return null;
-        return ProjectDto.from(project);
+
+        ProjectDto projectDto = ProjectDto.from(project);
+        if (isParticipant(project, user)) projectDto.setStatus(1);
+        else if (isInvited(project, user)) projectDto.setStatus(2);
+        else if (isJoined(project, user)) projectDto.setStatus(3);
+
+        return projectDto;
     }
+
+    //TODO optimize query form db
+
+    private boolean isParticipant(Project project, User user) {
+        if (project == null || user == null) return false;
+
+        if (project.getParticipants() != null) {
+            for (User participant: project.getParticipants()) {
+                if (participant.getId().equals(user.getId())) {
+                    return true;
+                }
+            }
+            return user.getId().equals(project.getLeader().getId());
+        }
+
+        return false;
+    }
+
+    private boolean isInvited(Project project, User user) {
+        if (user == null || project == null) return false;
+        List<Project> invited = notificationService.getProjectUserInvited(user);
+        if (invited == null || invited.isEmpty()) return false;
+        for (Project project1: invited) {
+            if (project1.getId().equals(project.getId())) return true;
+        }
+
+        return false;
+    }
+
+    private boolean isJoined(Project project, User user) {
+        if (user == null || project == null) return false;
+        List<Project> joined = notificationService.getProjectUserJoined(user);
+        if (joined == null || joined.isEmpty()) return false;
+        for (Project project1: joined) {
+            if (project1.getId().equals(project.getId())) return true;
+        }
+
+        return false;
+    }
+
 
     @Override
     public List<SimpleProjectDto> findProjectDtos(String name, String vacancyName, Integer knowledgeLevel, Integer experience, String principal) {

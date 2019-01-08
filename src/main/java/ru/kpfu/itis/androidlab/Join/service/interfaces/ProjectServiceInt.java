@@ -13,7 +13,7 @@ public interface ProjectServiceInt {
 
     List<Project> getUserOwnerProjects(User user);
     List<ProjectDto> getUserProjectDtos(Long userId);
-    ProjectDto getProjectDto(Long id);
+    ProjectDto getProjectDto(Long id, String principal);
     Project getProject(Long id);
 
     //List<SimpleProjectDto> findProjectDtos(String name, String vacancyName, Integer knowledgeLevel, Integer experience, CustomUserDetails principal);

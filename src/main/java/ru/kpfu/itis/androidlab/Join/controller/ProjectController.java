@@ -70,8 +70,9 @@ public class ProjectController extends MainController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity getProject(@PathVariable Long id) {
-        ProjectDto projectDto = projectService.getProjectDto(id);
+    public ResponseEntity getProject(@PathVariable Long id,
+                                     Authentication authentication) {
+        ProjectDto projectDto = projectService.getProjectDto(id, (String) authentication.getPrincipal());
         if (projectDto == null){
             return createResponseEntity(ResultForm.builder().code(400).error("project not exists").build());
         }
