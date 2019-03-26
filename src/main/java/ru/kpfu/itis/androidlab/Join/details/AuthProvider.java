@@ -36,10 +36,13 @@ public class AuthProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String login  = authentication.getName();
         String password = authentication.getCredentials().toString();
+        String tokenDevice = ((CustomUserDetails)authentication.getDetails()).getTokenDevice();
 
         User userDataOptional = userRepository.findUserByEmail(login);
         if (userDataOptional != null) {
             if (passwordEncoder.matches(password, userDataOptional.getPassword())) {
+                userDataOptional.setTokenDevice(tokenDevice);
+                userRepository.save(userDataOptional);
 
 //                if (!userDataOptional.isConfirmed()) {
 //                    throw new BadCredentialsException("Confirmation is failed");

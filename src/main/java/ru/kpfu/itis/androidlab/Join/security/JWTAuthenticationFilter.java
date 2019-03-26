@@ -29,8 +29,6 @@ import static ru.kpfu.itis.androidlab.Join.security.SecurityConstants.*;
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private AuthenticationManager authenticationManager;
-    @Autowired
-    private UserRepository userRepository;
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
@@ -43,12 +41,16 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             User creds = new ObjectMapper()
                                 .readValue(request.getInputStream(), User.class);
 
+            String tokenDevice = creds.getTokenDevice();
+
+            CustomUserDetails userDetails = new CustomUserDetails(creds.getEmail(), creds.getPassword(), new ArrayList<>());
+            userDetails.setTokenDevice(tokenDevice);
+
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword());
+            usernamePasswordAuthenticationToken.setDetails(userDetails);
+
             return authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            creds.getEmail(),
-                            creds.getPassword(),
-                            new ArrayList<>()
-                    )
+                    usernamePasswordAuthenticationToken
             );
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -74,12 +76,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                             .withSubject(customUserDetails.getUsername())
                             .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                             .sign(Algorithm.HMAC512(SECRET.getBytes()));
-
-        String tokenDevice = request.getHeader("tokenDevice");
-        User user = userRepository.getOne(customUserDetails.getId());
-        user.setTokenDevice(tokenDevice);
-        userRepository.save(user);
-
 
 
         response.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
