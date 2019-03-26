@@ -32,9 +32,11 @@ public class NotificationService implements NotificationServiceInt {
     private NotificationHelper notificationHelper;
 
     public NotificationService(NotificationRepository notificationRepository,
-                               ProjectServiceInt projectService) {
+                               ProjectServiceInt projectService,
+                               NotificationHelper notificationHelper) {
         this.notificationRepository = notificationRepository;
         this.projectService = projectService;
+        this.notificationHelper = notificationHelper;
     }
 
     @Override
