@@ -48,6 +48,7 @@ public class NotificationService implements NotificationServiceInt {
 
 
         notificationRepository.save(notification);
+        sendPushNotification(notification);
     }
 
     private void sendPushNotification(Notification notification) {
@@ -108,6 +109,8 @@ public class NotificationService implements NotificationServiceInt {
 
         notificationRepository.save(notification);
         notificationRepository.save(newNotification);
+        sendPushNotification(notification);
+        sendPushNotification(newNotification);
     }
 
     @Override
