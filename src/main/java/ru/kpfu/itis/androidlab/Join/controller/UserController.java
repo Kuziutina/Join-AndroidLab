@@ -37,9 +37,6 @@ public class UserController extends MainController{
     private UserProfileValidator userProfileValidator;
     private InviteValidator inviteValidator;
 
-    //TT
-    @Autowired
-    public NotificationHelper notificationHelper;
 
     public UserController(UserServiceInt userService,
                           SpecializationServiceInt specializationService,
@@ -176,9 +173,6 @@ public class UserController extends MainController{
         if (errors.hasErrors()) {
             return createValidErrorResponse(errors);
         }
-
-        //TT
-        notificationHelper.send(null, null);
 
         projectService.inviteUser(inviteUserForm);
 
