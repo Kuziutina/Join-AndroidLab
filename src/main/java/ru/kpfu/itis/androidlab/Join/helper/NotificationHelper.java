@@ -30,12 +30,14 @@ public class NotificationHelper {
 //        notification_body.put("body", /*notification.getMessage()*/ "boooody");
 //
 //        body.put("notification", notification_body);
+        JSONObject data = new JSONObject();
 
-        body.put("id", notification.getId());
-        body.put("type", notification.getType());
-        body.put("user", notification.getUser());
-        body.put("project", notification.getProject());
+        data.put("id", notification.getId());
+        data.put("type", notification.getType());
+        data.put("user", notification.getUser());
+        data.put("project", notification.getProject());
 
+        body.put("data", data);
         HttpEntity<String> request = new HttpEntity<>(body.toString());
         CompletableFuture<String> pushNotification = pushNotificationsService.send(request);
         CompletableFuture.allOf(pushNotification).join();
