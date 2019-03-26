@@ -34,6 +34,8 @@ public class User {
 
     private String profileImageLink;
 
+    private String tokenDevice;
+
     @ManyToMany(mappedBy = "participants", fetch = FetchType.LAZY)
     private List<Project> projects;
 

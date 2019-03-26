@@ -75,11 +75,16 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                             .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                             .sign(Algorithm.HMAC512(SECRET.getBytes()));
 
+        String tokenDevice = request.getHeader("tokenDevice");
+        User user = userRepository.getOne(customUserDetails.getId());
+        user.setTokenDevice(tokenDevice);
+        userRepository.save(user);
+
 
 
         response.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
         response.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-        response.getWriter().print("{\"user_id\": " + customUserDetails.getId() + ", \"" + TOKEN_PREFIX + HEADER_STRING + "\":\"" + token + "\"}");
+        response.getWriter().print("{\"user_id\": " + customUserDetails.getId() + ", \"" +HEADER_STRING + "\":\"" + TOKEN_PREFIX +  token + "\"}");
         response.getWriter().flush();
     }
 }

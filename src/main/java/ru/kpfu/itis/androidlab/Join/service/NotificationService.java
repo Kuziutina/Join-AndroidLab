@@ -3,6 +3,7 @@ package ru.kpfu.itis.androidlab.Join.service;
 import org.springframework.stereotype.Service;
 import ru.kpfu.itis.androidlab.Join.dto.NotificationDto;
 import ru.kpfu.itis.androidlab.Join.form.AnswerNotificationForm;
+import ru.kpfu.itis.androidlab.Join.helper.NotificationHelper;
 import ru.kpfu.itis.androidlab.Join.model.Notification;
 import ru.kpfu.itis.androidlab.Join.model.Project;
 import ru.kpfu.itis.androidlab.Join.model.User;
@@ -28,6 +29,7 @@ public class NotificationService implements NotificationServiceInt {
 
     private NotificationRepository notificationRepository;
     private ProjectServiceInt projectService;
+    private NotificationHelper notificationHelper;
 
     public NotificationService(NotificationRepository notificationRepository,
                                ProjectServiceInt projectService) {
@@ -43,7 +45,27 @@ public class NotificationService implements NotificationServiceInt {
                 .user(user)
                 .type(type)
                 .build();
+
+
         notificationRepository.save(notification);
+    }
+
+    private void sendPushNotification(Notification notification) {
+        User user = null;
+        if (notification.getType() == 1 ||
+                notification.getType() == 2 ||
+                notification.getType() == 4 ||
+                notification.getType() == 11) {
+            user = notification.getProject().getLeader();
+        }
+        else if (notification.getType() == 0 ||
+                notification.getType() == 3 ||
+                notification.getType() == 5 ||
+                notification.getType() == 10) {
+            user = notification.getUser();
+        }
+        if (user == null || user.getTokenDevice() == null || user.getTokenDevice().isEmpty()) return;
+        notificationHelper.send(user, notification);
     }
 
     @Override

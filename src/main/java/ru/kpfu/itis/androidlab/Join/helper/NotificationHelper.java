@@ -22,14 +22,19 @@ public class NotificationHelper {
 
     public ResponseEntity<String> send(User user, Notification notification) {
         JSONObject body = new JSONObject();
-//        body.put("to", user.getDeviceToken());
+        body.put("to", user.getTokenDevice());
         body.put("priority", "high");
 
-        JSONObject notification_body = new JSONObject();
-        notification_body.put("title", notification.getType());
-//        notification_body.put("body", notification.getMessage());
+//        JSONObject notification_body = new JSONObject();
+//        notification_body.put("title", /*notification.getType()*/ "testInvite");
+//        notification_body.put("body", /*notification.getMessage()*/ "boooody");
+//
+//        body.put("notification", notification_body);
 
-        body.put("notification", notification);
+        body.put("id", notification.getId());
+        body.put("type", notification.getType());
+        body.put("user", notification.getUser());
+        body.put("project", notification.getProject());
 
         HttpEntity<String> request = new HttpEntity<>(body.toString());
         CompletableFuture<String> pushNotification = pushNotificationsService.send(request);

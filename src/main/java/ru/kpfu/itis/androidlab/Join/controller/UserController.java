@@ -3,6 +3,7 @@ package ru.kpfu.itis.androidlab.Join.controller;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.kpfu.itis.androidlab.Join.dto.*;
 import ru.kpfu.itis.androidlab.Join.form.*;
+import ru.kpfu.itis.androidlab.Join.helper.NotificationHelper;
 import ru.kpfu.itis.androidlab.Join.model.User;
 import ru.kpfu.itis.androidlab.Join.repository.UserRepository;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.ProjectServiceInt;
@@ -34,6 +36,10 @@ public class UserController extends MainController{
     private ProjectServiceInt projectService;
     private UserProfileValidator userProfileValidator;
     private InviteValidator inviteValidator;
+
+    //TT
+    @Autowired
+    public NotificationHelper notificationHelper;
 
     public UserController(UserServiceInt userService,
                           SpecializationServiceInt specializationService,
@@ -59,8 +65,7 @@ public class UserController extends MainController{
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<UserDto> getUserProfile(@PathVariable Long id) {
-
+    public ResponseEntity<UserDto> getUserProfile(@PathVariable Long id, Authentication authentication) {
         UserDto userDto = userService.getUserProfile(id);
 
         return ResponseEntity.ok(userDto);
@@ -171,6 +176,9 @@ public class UserController extends MainController{
         if (errors.hasErrors()) {
             return createValidErrorResponse(errors);
         }
+
+        //TT
+        notificationHelper.send(null, null);
 
         projectService.inviteUser(inviteUserForm);
 
