@@ -30,11 +30,11 @@ public class NotificationHelper {
         body.put("to", user.getTokenDevice());
         body.put("priority", "high");
 
-//        JSONObject notification_body = new JSONObject();
-//        notification_body.put("title", /*notification.getType()*/ "testInvite");
-//        notification_body.put("body", /*notification.getMessage()*/ "boooody");
-//
-//        body.put("notification", notification_body);
+        JSONObject notification_body = new JSONObject();
+        notification_body.put("title", /*notification.getType()*/ "testInvite");
+        notification_body.put("body", /*notification.getMessage()*/ "boooody");
+
+        body.put("notification", notification_body);
         JSONObject data = new JSONObject();
 
         data.put("id", notification.getId());
