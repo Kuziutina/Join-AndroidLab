@@ -15,7 +15,7 @@ import java.util.*;
 
 @Service
 public class NotificationService implements NotificationServiceInt {
-
+//
 //    private static final String INVITE = "Пользователь %s приглашает вас присоедениться к проекту %s";                  //0
 //    private static final String JOIN = "Пользователь %s хочет присоединиться к проекту %s";                             //2
 //    private static final String YES_FROM_USER = "Пользователь %s принял ваше приглашение на вступление в проект %s";    //1
@@ -55,7 +55,13 @@ public class NotificationService implements NotificationServiceInt {
 
     private void sendPushNotification(Notification notification) {
         User user = null;
-        if (notification.getType() == 1 ||
+        if (notification.getType() == 6 ||
+                notification.getType() == 7 ||
+                notification.getType() == 8 ||
+                notification.getType() == 9) {
+            return;
+        }
+        else if (notification.getType() == 1 ||
                 notification.getType() == 2 ||
                 notification.getType() == 4 ||
                 notification.getType() == 11) {
