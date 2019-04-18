@@ -115,6 +115,7 @@ public class NotificationHelper {
 
         body.put("data", data);
         HttpEntity<String> request = new HttpEntity<>(body.toString());
+        request.getHeaders().add("Content-type", "application/json; charset=UTF-8");
         CompletableFuture<String> pushNotification = pushNotificationsService.send(request);
         CompletableFuture.allOf(pushNotification).join();
 
