@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,8 @@ import ru.kpfu.itis.androidlab.Join.dto.UserDto;
 import ru.kpfu.itis.androidlab.Join.model.Notification;
 import ru.kpfu.itis.androidlab.Join.model.User;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -100,7 +103,11 @@ public class NotificationHelper {
         notification_body.put("title", /*notification.getType()*/ title);
         notification_body.put("body", /*notification.getMessage()*/ body_notification);
 
+
         body.put("notification", notification_body);
+
+        body.put("content_available", true);
+
         JSONObject data = new JSONObject();
 
         data.put("id", notification.getId());
@@ -112,10 +119,15 @@ public class NotificationHelper {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+        System.out.println(body.toString());
 
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-type", "application/json; charset=UTF-8");
         body.put("data", data);
-        HttpEntity<String> request = new HttpEntity<>(body.toString());
-        request.getHeaders().add("Content-type", "application/json; charset=UTF-8");
+        HttpEntity<String> request = new HttpEntity<>(body.toString(), headers);
+
+
         CompletableFuture<String> pushNotification = pushNotificationsService.send(request);
         CompletableFuture.allOf(pushNotification).join();
 
