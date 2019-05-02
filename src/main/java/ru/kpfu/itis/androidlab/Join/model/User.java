@@ -3,6 +3,7 @@ package ru.kpfu.itis.androidlab.Join.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -36,6 +37,8 @@ public class User {
 
     private String tokenDevice;
 
+    private Boolean online;
+
     @ManyToMany(mappedBy = "participants", fetch = FetchType.LAZY)
     private List<Project> projects;
 
@@ -50,6 +53,12 @@ public class User {
 
     @OneToMany(mappedBy = "leader", fetch = FetchType.LAZY)
     private List<Project> leaderProjects;
+
+    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY)
+    private List<Chat> chats_sender;
+
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
+    private List<Chat> chats_receiver;
 
 
     @Override
@@ -71,5 +80,12 @@ public class User {
     public int hashCode() {
 
         return Objects.hash(super.hashCode(), id, email, username, password, name, lastName, phone);
+    }
+
+    public List<Chat> getChat() {
+        List<Chat> chats = new ArrayList<>();
+        chats.addAll(chats_receiver);
+        chats.addAll(chats_sender);
+        return chats;
     }
 }

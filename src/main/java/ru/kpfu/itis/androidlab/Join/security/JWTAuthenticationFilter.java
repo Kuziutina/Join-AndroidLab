@@ -3,18 +3,14 @@ package ru.kpfu.itis.androidlab.Join.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.kpfu.itis.androidlab.Join.details.CustomUserDetails;
 import ru.kpfu.itis.androidlab.Join.model.User;
-import ru.kpfu.itis.androidlab.Join.repository.UserRepository;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -73,7 +69,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         CustomUserDetails customUserDetails = (CustomUserDetails) authResult.getPrincipal();
 
         String token = JWT.create()
-                            .withSubject(customUserDetails.getUsername())
+                            .withSubject(customUserDetails.getUsername() + "," + customUserDetails.getId())
                             .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                             .sign(Algorithm.HMAC512(SECRET.getBytes()));
 

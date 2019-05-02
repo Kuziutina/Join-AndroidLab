@@ -6,6 +6,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import ru.kpfu.itis.androidlab.Join.details.CustomUserDetails;
+import ru.kpfu.itis.androidlab.Join.model.User;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -52,8 +54,13 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                                 .getSubject();
 
             if (user != null) {
+                String data[] = user.split(",");
+                User customUserDetails = new User();
+                customUserDetails.setEmail(data[0]);
+                if (!data[1].equals("null"))
+                    customUserDetails.setId(Long.parseLong(data[1]));
 
-                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+                return new UsernamePasswordAuthenticationToken(customUserDetails, null, new ArrayList<>());
             }
 
             return null;

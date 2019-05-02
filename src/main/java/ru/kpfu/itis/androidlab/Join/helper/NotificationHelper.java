@@ -8,8 +8,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import ru.kpfu.itis.androidlab.Join.dto.MessageDto;
 import ru.kpfu.itis.androidlab.Join.dto.ProjectDto;
 import ru.kpfu.itis.androidlab.Join.dto.UserDto;
+import ru.kpfu.itis.androidlab.Join.model.Message;
 import ru.kpfu.itis.androidlab.Join.model.Notification;
 import ru.kpfu.itis.androidlab.Join.model.User;
 
@@ -131,6 +133,14 @@ public class NotificationHelper {
         CompletableFuture<String> pushNotification = pushNotificationsService.send(request);
         CompletableFuture.allOf(pushNotification).join();
 
+        ResponseEntity<String> firebaseResponse = getStringResponseEntity(pushNotification);
+        if (firebaseResponse != null) return firebaseResponse;
+
+
+        return new ResponseEntity<>("ERROR NOTIFICATION", HttpStatus.BAD_REQUEST);
+    }
+
+    private ResponseEntity<String> getStringResponseEntity(CompletableFuture<String> pushNotification) {
         try {
             String firebaseResponse = pushNotification.get();
 
@@ -140,6 +150,46 @@ public class NotificationHelper {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    public ResponseEntity<String> sendMessageNotification(Message message) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JSONObject body = new JSONObject();
+        body.put("to", message.getReceiver().getTokenDevice());
+        body.put("priority", "high");
+
+        JSONObject notification_body = new JSONObject();
+        String title = "Новое сообщение";
+        String body_notification = message.getSender().getUsername() + ": " + message.getText();
+
+
+        notification_body.put("title", /*notification.getType()*/ title);
+        notification_body.put("body", /*notification.getMessage()*/ body_notification);
+
+
+        body.put("notification", notification_body);
+
+        body.put("content_available", true);
+
+        JSONObject data = new JSONObject();
+
+        try {
+            data.put("message", objectMapper.writeValueAsString(MessageDto.from(message)));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-type", "application/json; charset=UTF-8");
+        body.put("data", data);
+        HttpEntity<String> request = new HttpEntity<>(body.toString(), headers);
+
+
+        CompletableFuture<String> pushNotification = pushNotificationsService.send(request);
+        CompletableFuture.allOf(pushNotification).join();
+
+        ResponseEntity<String> firebaseResponse = getStringResponseEntity(pushNotification);
+        if (firebaseResponse != null) return firebaseResponse;
 
 
         return new ResponseEntity<>("ERROR NOTIFICATION", HttpStatus.BAD_REQUEST);
