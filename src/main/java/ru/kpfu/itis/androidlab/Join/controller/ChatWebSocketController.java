@@ -1,13 +1,7 @@
 package ru.kpfu.itis.androidlab.Join.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-import ru.kpfu.itis.androidlab.Join.dto.MessageDto;
-import ru.kpfu.itis.androidlab.Join.model.User;
 import ru.kpfu.itis.androidlab.Join.service.MessageService;
 import ru.kpfu.itis.androidlab.Join.service.UserService;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.UserServiceInt;
