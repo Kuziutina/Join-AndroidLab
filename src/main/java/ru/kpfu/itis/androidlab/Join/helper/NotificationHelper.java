@@ -37,7 +37,7 @@ import java.util.concurrent.ExecutionException;
 @Component
 public class NotificationHelper {
 
-    private static final String INVITE = "Пользователь %s приглашает вас присоедениться к проекту %s";                  //0
+    private static final String INVITE = "Пользователь %s приглашает вас присоединиться к проекту %s";                  //0
     private static final String JOIN = "Пользователь %s хочет присоединиться к проекту %s";                             //2
     private static final String YES_FROM_USER = "Пользователь %s принял ваше приглашение на вступление в проект %s";    //1
     private static final String NO_FROM_USER = "Пользователь %s отклонил ваше приглашение на всупление в проект %s";    //1
