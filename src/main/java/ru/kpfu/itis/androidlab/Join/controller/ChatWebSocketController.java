@@ -25,7 +25,7 @@ public class ChatWebSocketController {
         this.messageService = messageService;
     }
 
-
+/*
     @MessageMapping("/openApp/{userId}")
     public void notificationMessageOff(String m, @PathVariable Long userId) {
         User user = userService.getUser(userId);
@@ -47,4 +47,5 @@ public class ChatWebSocketController {
         User user = userService.getUser(userId);
         user.setOnline(false);
     }
+    */
 }
