@@ -12,6 +12,7 @@ import ru.kpfu.itis.androidlab.Join.dto.SimpleProjectDto;
 import ru.kpfu.itis.androidlab.Join.form.InviteUserForm;
 import ru.kpfu.itis.androidlab.Join.form.ProjectForm;
 import ru.kpfu.itis.androidlab.Join.form.ResultForm;
+import ru.kpfu.itis.androidlab.Join.model.User;
 import ru.kpfu.itis.androidlab.Join.service.interfaces.ProjectServiceInt;
 import ru.kpfu.itis.androidlab.Join.validators.InviteValidator;
 import ru.kpfu.itis.androidlab.Join.validators.ProjectValidator;
@@ -53,7 +54,7 @@ public class ProjectController extends MainController {
                                          @RequestParam(value = "knowledge_level", required = false) Integer level,
                                          @RequestParam(value = "experience", required = false) Integer experience,
                                          Authentication authentication) {
-        List<SimpleProjectDto> projectDtos = projectService.findProjectDtos(name, vacancyName, level, experience, (String)authentication.getPrincipal());
+        List<SimpleProjectDto> projectDtos = projectService.findProjectDtos(name, vacancyName, level, experience, ((User)authentication.getPrincipal()).getEmail());
         return ResponseEntity.ok(projectDtos);
     }
 
@@ -72,7 +73,7 @@ public class ProjectController extends MainController {
     @GetMapping(value = "/{id}")
     public ResponseEntity getProject(@PathVariable Long id,
                                      Authentication authentication) {
-        ProjectDto projectDto = projectService.getProjectDto(id, (String) authentication.getPrincipal());
+        ProjectDto projectDto = projectService.getProjectDto(id, ((User) authentication.getPrincipal()).getEmail());
         if (projectDto == null){
             return createResponseEntity(ResultForm.builder().code(400).error("project not exists").build());
         }
