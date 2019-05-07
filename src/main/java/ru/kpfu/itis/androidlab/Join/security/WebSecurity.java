@@ -56,7 +56,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                .antMatchers("/registration/*").permitAll()
                .antMatchers("/recovery").permitAll()
                .antMatchers("/recovery/*").permitAll()
-                .antMatchers("/socket-end-point").permitAll()
+                .antMatchers("/socket-end-point/*").permitAll()
                .anyRequest().authenticated()
                 // .anyRequest().permitAll()
                 .and()
