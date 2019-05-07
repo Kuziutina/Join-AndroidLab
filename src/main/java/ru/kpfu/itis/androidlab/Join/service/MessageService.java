@@ -46,9 +46,10 @@ public class MessageService implements MessageServiceInt{
 
         messageRepository.save(message);
 
-        if (message.getReceiver() != null && message.getReceiver().getOnline()) {
-            notificationHelper.sendMessageNotification(message);
-        }
+        //TODO fix lazy exception
+//        if (message.getReceiver() != null && message.getReceiver().getOnline()) {
+//            notificationHelper.sendMessageNotification(message);
+//        }
 
     }
 

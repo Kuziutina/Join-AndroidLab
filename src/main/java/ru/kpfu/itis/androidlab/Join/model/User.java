@@ -3,6 +3,7 @@ package ru.kpfu.itis.androidlab.Join.model;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -36,6 +37,7 @@ public class User {
     private String profileImageLink;
 
     private String tokenDevice;
+
 
     private Boolean online;
 

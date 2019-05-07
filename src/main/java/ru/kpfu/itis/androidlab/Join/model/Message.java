@@ -19,15 +19,15 @@ public class Message {
     private String text;
     private Date date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "chat", referencedColumnName = "id")
     private Chat chat;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "sender", referencedColumnName = "id")
     private User sender;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "receiver", referencedColumnName = "id")
     private User receiver;
 }
